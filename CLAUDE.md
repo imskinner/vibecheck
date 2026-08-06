@@ -190,6 +190,14 @@ loud rather than shipping anyway.
 
 ---
 
+## Design direction (M2)
+
+Decided after two mockup rounds: the **journey-rail / instrument hybrid** — see
+`design/DIRECTION.md` for tokens and the non-negotiable UI rules (several encode product rules:
+the cap as hero moment, `model_inference` visually distinct, thresholds displayed never authored,
+titles-first assumptions). `design/proto-a-rail.html` is the clickable reference. Do not
+introduce a different visual language in M2 without an explicit decision.
+
 ## Commands
 
 | Command | What it does |

@@ -1,0 +1,698 @@
+<title>Vibecheck — Prototype A: Journey Rail</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  /* ============================================================
+     PROTOTYPE A — JOURNEY RAIL
+     Hybrid: Instrument's material world (warm graphite, DIN,
+     functional orange) with the Lab's plain-question framing and
+     the Dossier's question-shaped kill-shots — no theming.
+     Navigation: left rail = the loop itself. Breathing space via
+     titles-first ledger; statements live one click deep.
+     ============================================================ */
+  :root {
+    color-scheme: dark;
+    --ground: #16171a;
+    --panel: #1d1f23;
+    --panel-2: #24262b;
+    --well: #101113;
+    --edge: #2f3238;
+    --ink: #e7e5dd;
+    --ink-2: #a5a49b;
+    --ink-3: #6d6d66;
+    --accent: #ff7a1a;
+    --accent-soft: rgba(255,122,26,.14);
+    --ok: #9fb867;
+    --warn: #d9a93c;
+    --display: "Bahnschrift", "Segoe UI", sans-serif;
+    --body: "Segoe UI", sans-serif;
+    --mono: "Consolas", ui-monospace, monospace;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+  .app { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+  @media (max-width: 860px) { .app { grid-template-columns: 1fr; } .rail { position: static !important; height: auto !important; flex-direction: row !important; overflow-x: auto; } .rail .steps { flex-direction: row !important; } .rail .brand-box { display: none; } }
+
+  /* ---------- rail ---------- */
+  .rail {
+    background: var(--panel); border-right: 1px solid var(--edge);
+    padding: 26px 0; display: flex; flex-direction: column; gap: 30px;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand-box { padding: 0 24px; }
+  .brand { font-family: var(--display); font-size: 15px; letter-spacing: .26em; text-transform: uppercase; }
+  .brand b { color: var(--accent); }
+  .brand-box small { display: block; margin-top: 4px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+  .steps { display: flex; flex-direction: column; }
+  .step {
+    display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: center;
+    padding: 12px 24px; cursor: pointer; border: 0; background: none; text-align: left;
+    color: var(--ink-2); font-family: var(--body); font-size: 13.5px;
+    border-left: 3px solid transparent;
+  }
+  .step:hover { color: var(--ink); background: rgba(255,255,255,.02); }
+  .step:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .step .n {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 11px;
+    border: 1px solid var(--edge); color: var(--ink-3);
+  }
+  .step.done .n { border-color: var(--ok); color: var(--ok); }
+  .step.done .n::before { content: "✓"; }
+  .step.done .n span { display: none; }
+  .step.active { color: var(--ink); border-left-color: var(--accent); background: var(--accent-soft); }
+  .step.active .n { border-color: var(--accent); color: var(--accent); }
+  .step small { display: block; font-size: 11px; color: var(--ink-3); }
+  .rail .foot { margin-top: auto; padding: 0 24px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); line-height: 1.8; }
+
+  /* ---------- main ---------- */
+  main { padding: 40px 48px 90px; max-width: 900px; }
+  @media (max-width: 640px) { main { padding: 28px 18px 70px; } }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .crumb { font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; color: var(--ink-3); text-transform: uppercase; }
+  h1 { font-family: var(--display); font-weight: 600; font-size: clamp(24px, 3.4vw, 32px); margin: 10px 0 6px; text-wrap: balance; }
+  .lede { color: var(--ink-2); max-width: 60ch; }
+
+  /* buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--display); font-size: 12.5px; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase;
+    background: var(--accent); color: #1b1206; border: 0; border-radius: 3px;
+    padding: 13px 22px; cursor: pointer;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .btn.ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--edge); }
+  .btn.ghost:hover { color: var(--ink); border-color: var(--ink-3); }
+
+  /* ---------- screen 1: new idea ---------- */
+  .inputcard { margin-top: 34px; background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 26px; }
+  .inputcard label { font-family: var(--display); font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
+  .inputcard textarea {
+    width: 100%; min-height: 130px; margin-top: 12px; resize: vertical;
+    background: var(--well); color: var(--ink); border: 1px solid var(--edge); border-radius: 3px;
+    padding: 14px 16px; font-family: var(--body); font-size: 15px; line-height: 1.55;
+  }
+  .inputcard textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .or { margin: 14px 0; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: .2em; }
+  .urlrow { display: flex; gap: 10px; }
+  .urlrow input {
+    flex: 1; background: var(--well); color: var(--ink); border: 1px solid var(--edge); border-radius: 3px;
+    padding: 12px 16px; font-family: var(--mono); font-size: 13px;
+  }
+  .inputcard .actions { margin-top: 20px; display: flex; justify-content: flex-end; }
+  .promise { margin-top: 18px; font-size: 13px; color: var(--ink-3); max-width: 58ch; }
+
+  /* ---------- screen 2: canvas ---------- */
+  .gate {
+    margin: 30px 0 22px; padding: 14px 18px; border-radius: 3px;
+    background: var(--accent-soft); border: 1px solid rgba(255,122,26,.3);
+    font-size: 13.5px; color: var(--ink);
+    display: flex; gap: 12px; align-items: baseline;
+  }
+  .gate b { font-family: var(--display); letter-spacing: .1em; font-size: 11px; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
+  .canvas-grid { display: flex; flex-direction: column; gap: 10px; }
+  .field { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 16px 20px; display: grid; grid-template-columns: 150px 1fr auto; gap: 18px; align-items: start; }
+  @media (max-width: 640px) { .field { grid-template-columns: 1fr; gap: 6px; } }
+  .field .k { font-family: var(--display); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); padding-top: 3px; }
+  .field .v { font-size: 14.5px; }
+  .field .v.missing { color: var(--warn); font-style: italic; }
+  .field .edit { font-family: var(--mono); font-size: 11px; color: var(--ink-3); background: none; border: 1px solid var(--edge); border-radius: 3px; padding: 5px 10px; cursor: pointer; }
+  .field .edit:hover { color: var(--accent); border-color: var(--accent); }
+  .canvas-actions { margin-top: 24px; display: flex; gap: 12px; }
+
+  /* ---------- screen 3: report ---------- */
+  .scorebar {
+    position: sticky; top: 0; z-index: 5;
+    margin: 26px -8px 30px; padding: 16px 20px;
+    background: rgba(29,31,35,.96); border: 1px solid var(--edge); border-radius: 4px;
+    display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center;
+    backdrop-filter: blur(4px);
+  }
+  @media (max-width: 720px) { .scorebar { grid-template-columns: 1fr; gap: 14px; } }
+  .composite-chip { display: flex; align-items: baseline; gap: 10px; }
+  .composite-chip .num { font-family: var(--mono); font-size: 44px; font-variant-numeric: tabular-nums; line-height: 1; }
+  .composite-chip .cap {
+    font-family: var(--display); font-size: 10px; font-weight: 600; letter-spacing: .16em;
+    color: var(--accent); border: 1px solid rgba(255,122,26,.4); border-radius: 2px; padding: 4px 8px;
+    text-transform: uppercase;
+  }
+  .minis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  @media (max-width: 720px) { .minis { grid-template-columns: repeat(2, 1fr); } }
+  .mini .t { font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; color: var(--ink-3); text-transform: uppercase; }
+  .mini .v { font-family: var(--mono); font-size: 17px; font-variant-numeric: tabular-nums; margin: 2px 0 5px; }
+  .mini .bar { height: 4px; background: var(--well); border-radius: 2px; position: relative; }
+  .mini .bar i { position: absolute; top: -2px; width: 2.5px; height: 8px; background: var(--ink-2); border-radius: 1px; }
+  .mini .bar .z { position: absolute; top: 0; bottom: 0; background: rgba(231,229,221,.1); border-radius: 2px; }
+  .mini.eqm .v { color: var(--warn); }
+  .capline { grid-column: 1 / -1; font-size: 12.5px; color: var(--ink-2); }
+  .capline b { color: var(--ink); }
+
+  section.rep { margin-top: 44px; }
+  .sec-title { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+  .sec-title h2 { font-family: var(--display); font-weight: 600; font-size: 17px; letter-spacing: .04em; }
+  .sec-title span { font-family: var(--mono); font-size: 10px; color: var(--ink-3); letter-spacing: .14em; }
+  .sec-note { font-size: 13px; color: var(--ink-3); margin-bottom: 20px; max-width: 62ch; }
+
+  .kq { display: flex; flex-direction: column; gap: 10px; }
+  .kq-card {
+    background: var(--panel); border: 1px solid var(--edge); border-radius: 4px;
+    padding: 18px 22px; display: grid; grid-template-columns: 34px 1fr; gap: 16px;
+  }
+  .kq-card .n { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-top: 2px; }
+  .kq-card h3 { font-size: 16px; font-weight: 600; line-height: 1.45; text-wrap: balance; }
+  .kq-card .meta { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .kq-card .meta b { color: var(--ink-2); font-weight: 400; }
+  .kq-card .go { margin-top: 12px; }
+  .kq-card .go button { background: none; border: 0; color: var(--accent); font-family: var(--display); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; padding: 0; }
+  .kq-card .go button:hover { text-decoration: underline; }
+
+  .ledger-groups { display: flex; flex-direction: column; gap: 26px; }
+  .lgroup .gh { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 8px; }
+  .arow { border: 1px solid var(--edge); border-radius: 4px; background: var(--panel); margin-bottom: 6px; overflow: hidden; }
+  .arow summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 18px; align-items: center;
+    padding: 13px 18px; min-height: 48px;
+  }
+  .arow summary::-webkit-details-marker { display: none; }
+  .arow summary:hover { background: var(--panel-2); }
+  .arow summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  @media (max-width: 640px) { .arow summary { grid-template-columns: 1fr auto; } .arow .dots, .arow .origin-tag { display: none; } }
+  .arow .title { font-size: 14.5px; font-weight: 600; }
+  .arow .origin-tag { font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; color: var(--ink-3); }
+  .arow.rt .origin-tag { color: var(--accent); }
+  .dots { display: flex; gap: 10px; }
+  .dotset { display: flex; gap: 2.5px; align-items: center; }
+  .dotset i { width: 5px; height: 5px; border-radius: 50%; background: var(--edge); }
+  .dotset i.f { background: var(--ink-2); }
+  .dotset small { margin-right: 4px; font-family: var(--mono); font-size: 9px; color: var(--ink-3); }
+  .evchip { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); background: var(--well); padding: 4px 9px; border-radius: 2px; min-width: 74px; text-align: center; }
+  .evchip.zero { color: var(--warn); }
+  .abody { border-top: 1px solid var(--edge); padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 12px; background: var(--well); }
+  .abody .statement { font-size: 14px; color: var(--ink); max-width: 68ch; }
+  .abody .refuted-if { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); border-left: 3px solid var(--accent); padding: 6px 12px; background: var(--panel); }
+  .abody .refuted-if b { color: var(--accent); font-weight: 400; }
+  .cl { display: grid; grid-template-columns: 80px 1fr; gap: 12px; font-size: 13px; padding: 9px 12px; background: var(--panel); border-radius: 3px; }
+  .cl .k2 { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; padding-top: 3px; }
+  .cl .k2.s { color: var(--ok); } .cl .k2.r { color: var(--warn); }
+  .cl .src { display: block; margin-top: 3px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+  .cl.inference { background: transparent; border: 1px dashed var(--edge); font-style: italic; color: var(--ink-2); }
+
+  /* ---------- screen 4: discovery ---------- */
+  .pack-focus { margin: 28px 0; padding: 20px 24px; background: var(--panel); border: 1px solid var(--edge); border-left: 3px solid var(--accent); border-radius: 4px; }
+  .pack-focus .t { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; color: var(--accent); text-transform: uppercase; }
+  .pack-focus p { margin-top: 6px; font-size: 15.5px; font-weight: 600; max-width: 60ch; }
+  .pack-focus .thr { margin-top: 10px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+  .pack-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .pack-cols { grid-template-columns: 1fr; } }
+  .pcard { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 18px 20px; }
+  .pcard h3 { font-family: var(--display); font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 12px; }
+  .pcard ul { list-style: none; display: flex; flex-direction: column; gap: 9px; font-size: 13.5px; }
+  .pcard li a { color: var(--ink); text-decoration-color: var(--ink-3); }
+  .pcard li a:hover { color: var(--accent); }
+  .pcard li small { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+  .pcard.msg p { font-size: 13.5px; background: var(--well); border: 1px solid var(--edge); border-radius: 3px; padding: 12px 14px; color: var(--ink-2); }
+  .pcard ol { padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; color: var(--ink); }
+  .pcard ol li::marker { color: var(--accent); font-family: var(--mono); font-size: 11px; }
+
+  /* ---------- file drop ---------- */
+  .dropzone {
+    margin-top: 14px; border: 1.5px dashed var(--edge); border-radius: 4px;
+    padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+    color: var(--ink-3); font-size: 13.5px; cursor: pointer;
+  }
+  .dropzone:hover { border-color: var(--accent); color: var(--ink-2); }
+  .dropzone .exts { font-family: var(--mono); font-size: 10.5px; margin-left: auto; }
+  .filechip {
+    margin-top: 10px; display: inline-flex; align-items: center; gap: 10px;
+    background: var(--well); border: 1px solid var(--edge); border-radius: 3px;
+    padding: 8px 12px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-2);
+  }
+  .filechip b { color: var(--ok); font-weight: 400; }
+
+  /* ---------- competitive landscape ---------- */
+  .land { display: grid; grid-template-columns: 380px 1fr; gap: 14px; align-items: start; }
+  @media (max-width: 860px) { .land { grid-template-columns: 1fr; } }
+  .quad {
+    position: relative; background: var(--panel); border: 1px solid var(--edge); border-radius: 4px;
+    aspect-ratio: 1 / 1; overflow: hidden;
+  }
+  .quad .axis-x, .quad .axis-y {
+    position: absolute; font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+    color: var(--ink-3); text-transform: uppercase;
+  }
+  .quad .axis-x { bottom: 8px; left: 50%; transform: translateX(-50%); }
+  .quad .axis-y { top: 50%; left: 8px; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
+  .quad .midv { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--groove); }
+  .quad .midh { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--groove); }
+  .qd {
+    position: absolute; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .qd i { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-2); }
+  .qd.inferred i { background: transparent; border: 1.5px dashed var(--ink-3); }
+  .qd small { font-family: var(--mono); font-size: 8.5px; color: var(--ink-3); white-space: nowrap; }
+  .qd.you i { width: 13px; height: 13px; background: var(--accent); box-shadow: 0 0 12px rgba(255,122,26,.6); }
+  .qd.you small { color: var(--accent); font-size: 9.5px; letter-spacing: .1em; }
+  .empty-note {
+    position: absolute; right: 6%; top: 6%; max-width: 150px;
+    border: 1.5px dashed var(--accent); border-radius: 3px; padding: 8px 10px;
+    font-size: 10.5px; color: var(--ink-2); background: rgba(255,122,26,.06);
+  }
+  .quad-legend { margin-top: 8px; display: flex; gap: 18px; font-family: var(--mono); font-size: 9.5px; color: var(--ink-3); }
+  .quad-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ink-2); vertical-align: -1px; margin-right: 5px; }
+  .quad-legend .inf i { background: transparent; border: 1.5px dashed var(--ink-3); }
+
+  .cmx-filters { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .cfil {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    background: none; border: 1px solid var(--edge); border-radius: 2px; color: var(--ink-3);
+    padding: 5px 10px; cursor: pointer;
+  }
+  .cfil[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #1b1206; }
+  .cfil:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .cmx { display: flex; flex-direction: column; gap: 6px; }
+  .crow {
+    background: var(--panel-2); border: 1px solid var(--edge); border-radius: 3px;
+    padding: 12px 16px; display: grid; grid-template-columns: 150px 1fr auto; gap: 14px; align-items: baseline;
+  }
+  @media (max-width: 640px) { .crow { grid-template-columns: 1fr auto; } .crow .what { grid-column: 1 / -1; } }
+  .crow[data-threat="critical"] { box-shadow: inset 3px 0 0 var(--accent); }
+  .crow[data-threat="high"] { box-shadow: inset 3px 0 0 var(--warn); }
+  .crow[data-threat="medium"] { box-shadow: inset 3px 0 0 var(--ink-3); }
+  .crow[data-threat="low"] { box-shadow: inset 3px 0 0 var(--edge); }
+  .crow .cname { font-size: 14px; font-weight: 600; }
+  .crow .cname small { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--ink-3); text-transform: uppercase; margin-top: 2px; }
+  .crow .what { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .crow .what b { color: var(--ink); font-weight: 600; }
+  .tpill {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 2px; white-space: nowrap;
+  }
+  .tpill.critical { color: var(--accent); border: 1px solid rgba(255,122,26,.4); }
+  .tpill.high { color: var(--warn); border: 1px solid rgba(217,169,60,.4); }
+  .tpill.medium { color: var(--ink-2); border: 1px solid var(--edge); }
+  .tpill.low { color: var(--ink-3); border: 1px solid var(--edge); }
+  .empty-space-line {
+    margin-top: 12px; padding: 12px 16px; border-left: 3px solid var(--accent);
+    background: var(--panel); font-size: 13.5px; color: var(--ink-2); border-radius: 3px;
+  }
+  .empty-space-line b { color: var(--ink); }
+
+  /* ---------- screen 5: evidence ---------- */
+  .paste { margin-top: 28px; background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 22px; }
+  .paste textarea { width: 100%; min-height: 100px; background: var(--well); color: var(--ink); border: 1px solid var(--edge); border-radius: 3px; padding: 12px 14px; font-family: var(--body); font-size: 14px; }
+  .proposals { margin-top: 26px; display: flex; flex-direction: column; gap: 8px; }
+  .prop { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 14px 18px; display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+  .prop .q { font-size: 13.5px; }
+  .prop .q b { color: var(--accent); font-weight: 600; }
+  .prop .q .quote { display: block; margin-top: 4px; font-style: italic; color: var(--ink-2); }
+  .prop .q .map { display: block; margin-top: 5px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+  .prop .ok-btns { display: flex; gap: 8px; }
+  .prop .ok-btns button { font-family: var(--mono); font-size: 11px; padding: 6px 12px; border-radius: 3px; border: 1px solid var(--edge); background: none; color: var(--ink-2); cursor: pointer; }
+  .prop .ok-btns button.yes { border-color: var(--ok); color: var(--ok); }
+  .movement { margin-top: 30px; background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 22px 24px; }
+  .movement h3 { font-family: var(--display); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+  .moves { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .move { display: grid; grid-template-columns: 130px 1fr auto; gap: 16px; align-items: center; font-size: 13.5px; }
+  .move .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; color: var(--ink-3); text-transform: uppercase; }
+  .move .delta { font-family: var(--mono); font-size: 15px; }
+  .move .delta b { color: var(--accent); font-weight: 400; }
+  .move .why { font-size: 12px; color: var(--ink-3); text-align: right; }
+</style>
+
+<div class="app">
+  <nav class="rail" aria-label="Journey">
+    <div class="brand-box">
+      <div class="brand">VIBE<b>CHECK</b></div>
+      <small>PRIVACY ANALYTICS · RUN 001</small>
+    </div>
+    <div class="steps" role="tablist">
+      <button class="step done" data-go="s1"><span class="n"><span>1</span></span><span>Idea<small>described</small></span></button>
+      <button class="step done" data-go="s2"><span class="n"><span>2</span></span><span>Canvas<small>confirmed</small></span></button>
+      <button class="step active" data-go="s3"><span class="n"><span>3</span></span><span>Report<small>15 assumptions</small></span></button>
+      <button class="step" data-go="s4"><span class="n"><span>4</span></span><span>Discovery pack<small>ready</small></span></button>
+      <button class="step" data-go="s5"><span class="n"><span>5</span></span><span>Evidence<small>0 conversations</small></span></button>
+    </div>
+    <div class="foot">score 30/100 · capped<br>moves on primary evidence</div>
+  </nav>
+
+  <main>
+    <!-- SCREEN 1 -->
+    <section class="screen" id="s1">
+      <span class="crumb">Step 1 · Idea</span>
+      <h1>What are you thinking of building?</h1>
+      <p class="lede">A few sentences, or a landing page. Vibecheck turns it into the assumptions that could kill it — then hands you the people to ask.</p>
+      <div class="inputcard">
+        <label for="idea">Describe the idea</label>
+        <textarea id="idea">A privacy-first web analytics tool. A single-page dashboard, no cookies, no personal data — a subscription product competing against free Google Analytics for site owners who care about consent.</textarea>
+        <div class="or">— OR —</div>
+        <div class="urlrow"><input value="https://" aria-label="Landing page URL"><button class="btn ghost">Fetch</button></div>
+        <div class="dropzone" role="button" tabindex="0">
+          Drop a pitch memo, PRD or research doc
+          <span class="exts">.md .txt .pdf .docx .xlsx</span>
+        </div>
+        <div class="filechip">decision-log-memo.pdf · 6 pages <b>✓ text extracted</b></div>
+        <div class="actions"><button class="btn" data-go="s2">Extract canvas →</button></div>
+      </div>
+      <p class="promise">Nothing here is a report you read once. The score starts unflattering and only moves when real conversations come back.</p>
+    </section>
+
+    <!-- SCREEN 2 -->
+    <section class="screen" id="s2">
+      <span class="crumb">Step 2 · Canvas</span>
+      <h1>Did we read you right?</h1>
+      <p class="lede">Research runs on this, so fix it before it runs. Garbage in is the failure mode.</p>
+      <div class="gate"><b>Gate</b> Two fields came back empty. Fill them or confirm as-is — unknowns become assumptions to test.</div>
+      <div class="canvas-grid">
+        <div class="field"><span class="k">Problem</span><span class="v missing">not stated — what pain does this solve, for whom?</span><button class="edit">Edit</button></div>
+        <div class="field"><span class="k">Customer</span><span class="v">Owners of EU-facing SaaS and content sites, 50k+ monthly pageviews, who currently run Google Analytics</span><button class="edit">Edit</button></div>
+        <div class="field"><span class="k">Wedge</span><span class="v">A single-page, cookieless dashboard — against a free incumbent with near-total share</span><button class="edit">Edit</button></div>
+        <div class="field"><span class="k">Business model</span><span class="v">Subscription, $9–19/month per site</span><button class="edit">Edit</button></div>
+        <div class="field"><span class="k">Stage</span><span class="v missing">not stated</span><button class="edit">Edit</button></div>
+      </div>
+      <div class="canvas-actions">
+        <button class="btn" data-go="s3">Confirm — run research →</button>
+        <button class="btn ghost" data-go="s1">← Back</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3 -->
+    <section class="screen active" id="s3">
+      <span class="crumb">Step 3 · Report · ran 2026-08-06</span>
+      <h1>Privacy-first web analytics</h1>
+
+      <div class="scorebar">
+        <div class="composite-chip">
+          <span class="num">30</span>
+          <span class="cap">Capped</span>
+        </div>
+        <div class="minis">
+          <div class="mini"><span class="t">Severity</span><span class="v">54.0</span><div class="bar"><span class="z" style="left:29%;width:50%"></span><i style="left:54%"></i></div></div>
+          <div class="mini"><span class="t">Access</span><span class="v">50.0</span><div class="bar"><span class="z" style="left:25%;width:50%"></span><i style="left:50%"></i></div></div>
+          <div class="mini"><span class="t">Wedge</span><span class="v">50.0</span><div class="bar"><span class="z" style="left:25%;width:50%"></span><i style="left:50%"></i></div></div>
+          <div class="mini"><span class="t">Fit</span><span class="v">50.0</span><div class="bar"><span class="z" style="left:25%;width:50%"></span><i style="left:50%"></i></div></div>
+          <div class="mini eqm"><span class="t">Evidence</span><span class="v">0.0</span><div class="bar"><i style="left:0%"></i></div></div>
+        </div>
+        <div class="capline"><b>Held at 30.</b> Desk research is done and can't take this higher — every point above the cap needs a real conversation. Step 4 hands you the first ten.</div>
+      </div>
+
+      <section class="rep">
+        <div class="sec-title"><h2>What to test first</h2><span>RANKED · FATAL × UNKNOWN × CHEAP</span></div>
+        <div class="kq">
+          <article class="kq-card">
+            <span class="n">Q1</span>
+            <div>
+              <h3>Have your buyers already tried a privacy-analytics tool — and rejected it?</h3>
+              <div class="meta"><b>competition</b><span>impact 5 · uncertainty 5 · an afternoon to test</span><span>refuted if <b>6 of 10 have trialled one</b></span></div>
+              <div class="go"><button data-go="s4">Open discovery pack →</button></div>
+            </div>
+          </article>
+          <article class="kq-card">
+            <span class="n">Q2</span>
+            <div>
+              <h3>Does Google ship consent-free measurement inside free GA within 12 months?</h3>
+              <div class="meta"><b>timing</b><span>impact 5 · uncertainty 5</span><span>refuted if <b>it appears in GA's changelog</b></span></div>
+            </div>
+          </article>
+          <article class="kq-card">
+            <span class="n">Q3</span>
+            <div>
+              <h3>Have site operators actually removed a tracking script over privacy?</h3>
+              <div class="meta"><b>problem</b><span>impact 5 · uncertainty 4</span><span>refuted if <b>fewer than 5 of 10 did</b></span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="rep">
+        <div class="sec-title"><h2>Competitive landscape</h2><span>DRAWN 2026-08-06 · INFORMS WHAT TO TEST — NEVER THE SCORE</span></div>
+        <p class="sec-note">Threat means ability and motivation to occupy your wedge, not company size. Dashed entries are model knowledge, not research — treat accordingly.</p>
+        <div class="land">
+          <div>
+            <div class="quad" role="img" aria-label="Positioning quadrant: compliance story vs reporting depth">
+              <span class="midv"></span><span class="midh"></span>
+              <span class="axis-x">Owns the compliance story →</span>
+              <span class="axis-y">Reporting depth →</span>
+              <span class="qd" style="left:14%; top:12%"><i></i><small>Google Analytics</small></span>
+              <span class="qd" style="left:38%; top:30%"><i></i><small>Matomo</small></span>
+              <span class="qd inferred" style="left:30%; top:64%"><i></i><small>Cloudflare built-in</small></span>
+              <span class="qd" style="left:68%; top:38%"><i></i><small>Privacy vendors</small></span>
+              <span class="qd inferred" style="left:60%; top:70%"><i></i><small>OSS self-host</small></span>
+              <span class="qd inferred" style="left:12%; top:88%"><i></i><small>Do nothing</small></span>
+              <span class="qd you" style="left:85%; top:76%"><i></i><small>YOU</small></span>
+              <span class="empty-note">Claimed empty space — contested by the privacy vendors if Q1 goes badly</span>
+            </div>
+            <div class="quad-legend"><span><i></i>grounded in research claims</span><span class="inf"><i></i>model inference</span></div>
+          </div>
+          <div>
+            <div class="cmx-filters" role="group" aria-label="Filter by threat">
+              <button class="cfil" data-t="all" aria-pressed="true">All 6</button>
+              <button class="cfil" data-t="critical" aria-pressed="false">Critical</button>
+              <button class="cfil" data-t="high" aria-pressed="false">High</button>
+              <button class="cfil" data-t="medium" aria-pressed="false">Medium</button>
+              <button class="cfil" data-t="low" aria-pressed="false">Low</button>
+            </div>
+            <div class="cmx">
+              <div class="crow" data-threat="critical">
+                <span class="cname">Google Analytics<small>incumbent feature · inferred</small></span>
+                <span class="what">The free incumbent. <b>One consent-mode changelog entry closes the wedge</b> — which is exactly kill-shot Q2.</span>
+                <span class="tpill critical">Critical</span>
+              </div>
+              <div class="crow" data-threat="critical">
+                <span class="cname">Privacy vendors<small>direct · 3 claims</small></span>
+                <span class="what">Established cookieless-analytics subscriptions. If your buyers <b>already trialled and rejected one</b> (Q1), the wedge assumes a buyer that doesn't exist.</span>
+                <span class="tpill critical">Critical</span>
+              </div>
+              <div class="crow" data-threat="high">
+                <span class="cname">OSS self-host<small>diy substitute · inferred</small></span>
+                <span class="what">Free self-hostable dashboards. <b>Caps the subscription price</b> if a one-click deploy runs under $10/month.</span>
+                <span class="tpill high">High</span>
+              </div>
+              <div class="crow" data-threat="high">
+                <span class="cname">Cloudflare / platforms<small>incumbent feature · inferred</small></span>
+                <span class="what">Bundled cookieless analytics inside plans the ICP already pays for. The red team's platform-bundling assumption tests this.</span>
+                <span class="tpill high">High</span>
+              </div>
+              <div class="crow" data-threat="medium">
+                <span class="cname">Matomo<small>direct · 2 claims</small></span>
+                <span class="what">The GA-alternative veteran — full-depth reporting, heavier product. Competes for the search term, not the single-page buyer.</span>
+                <span class="tpill medium">Medium</span>
+              </div>
+              <div class="crow" data-threat="low">
+                <span class="cname">Do nothing<small>diy substitute · inferred</small></span>
+                <span class="what">Accept the consent-banner data loss and move on. The quiet default — and the reason severity is a kill-shot question.</span>
+                <span class="tpill low">Low</span>
+              </div>
+            </div>
+            <div class="empty-space-line"><b>Empty space, as claimed:</b> high-compliance, deliberately-shallow reporting. It stays empty only if Q1 comes back clean — which is why it's first.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="rep">
+        <div class="sec-title"><h2>Assumption ledger</h2><span>15 · 9 CANVAS + 6 RED TEAM · 18 CLAIMS</span></div>
+        <p class="sec-note">Titles up front; the full falsifiable statement, threshold and evidence one click in.</p>
+        <div class="ledger-groups">
+          <div class="lgroup">
+            <div class="gh">Problem &amp; customer</div>
+            <details class="arow" open>
+              <summary>
+                <span class="title">Privacy-driven script removals</span>
+                <span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></span>
+                <span class="origin-tag">CANVAS</span>
+                <span class="evchip">no evidence</span>
+              </summary>
+              <div class="abody">
+                <p class="statement">Operators of EU-facing SaaS or ecommerce sites doing 50k+ monthly pageviews have, in the past 24 months, removed or replaced a tracking script specifically for privacy or consent reasons.</p>
+                <div class="refuted-if">REFUTED IF <b>fewer than 5 of 10 contacted did so</b></div>
+                <div class="cl inference"><span class="k2">NULL</span><div>Desk research found no evidence either way — 3 retrieved documents yielded no claim. Moves nothing.</div></div>
+              </div>
+            </details>
+            <details class="arow">
+              <summary>
+                <span class="title">Consent-banner data loss</span>
+                <span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></span>
+                <span class="origin-tag">CANVAS</span>
+                <span class="evchip">no evidence</span>
+              </summary>
+              <div class="abody"><p class="statement">Among site owners who installed a cookie-consent banner, at least 4 in 10 saw analytics drop &gt;20% and acted on it — changed tools, added server-side tracking, or paid someone.</p><div class="refuted-if">REFUTED IF <b>fewer than 4 of 10 acted</b></div></div>
+            </details>
+            <details class="arow">
+              <summary>
+                <span class="title">GA barely used anyway</span>
+                <span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></span>
+                <span class="origin-tag">CANVAS</span>
+                <span class="evchip">5 claims</span>
+              </summary>
+              <div class="abody">
+                <p class="statement">Marketing leads at sub-50-employee companies open GA fewer than 4 times a month and use fewer than 3 report types — their real usage fits a single-page dashboard.</p>
+                <div class="refuted-if">REFUTED IF <b>6 of 10 use it more than that</b></div>
+                <div class="cl"><span class="k2 s">SUPPORTS</span><div>A marketer admits opening GA "about once a month, to screenshot one chart for a deck."<span class="src">news.ycombinator.com/item?id=19… · public_post · high</span></div></div>
+                <div class="cl"><span class="k2 r">REFUTES</span><div>An agency owner reports clients demanding full funnel and audience reports weekly.<span class="src">news.ycombinator.com/item?id=19… · public_post · medium</span></div></div>
+              </div>
+            </details>
+          </div>
+          <div class="lgroup">
+            <div class="gh">Money</div>
+            <details class="arow">
+              <summary><span class="title">Paid replacements for free Google tools</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></span><span class="origin-tag">CANVAS</span><span class="evchip">4 claims</span></summary>
+              <div class="abody"><p class="statement">Independent SaaS and content businesses ($10k–$500k ARR) already pay $10–50/month for at least one tool that replaced a free Google product.</p><div class="refuted-if">REFUTED IF <b>fewer than 4 of 10 do</b></div></div>
+            </details>
+            <details class="arow">
+              <summary><span class="title">Card-swipe buyers, no approval chain</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></span><span class="origin-tag">CANVAS</span><span class="evchip">4 claims</span></summary>
+              <div class="abody"><p class="statement">At least 7 of 10 target buyers have put a recurring $20–100/month SaaS charge on a card they control, without a finance approver, in the last 12 months.</p><div class="refuted-if">REFUTED IF <b>fewer than 7 of 10 have</b></div></div>
+            </details>
+            <details class="arow">
+              <summary><span class="title">Free self-hosting caps the price</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></span><span class="origin-tag">RED TEAM</span><span class="evchip">no evidence</span></summary>
+              <div class="abody"><p class="statement">Fewer than 3 of the 10 leading open-source analytics projects offer a one-click deploy that delivers an equivalent dashboard under $10/month in infrastructure.</p><div class="refuted-if">REFUTED IF <b>3 or more do</b></div></div>
+            </details>
+          </div>
+          <div class="lgroup">
+            <div class="gh">Reaching the buyer</div>
+            <details class="arow">
+              <summary><span class="title">Sub-$150 CAC without paid search</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></span><span class="origin-tag">CANVAS</span><span class="evchip">no evidence</span></summary>
+              <div class="abody"><p class="statement">At least 3 of the first 10 customers in a 60-day test arrive through organic, community or comparison-content routes at under $150 blended CAC.</p><div class="refuted-if">REFUTED IF <b>fewer than 3 of 10 do</b></div></div>
+            </details>
+            <details class="arow">
+              <summary><span class="title">Comparison-content channel saturated</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></span><span class="origin-tag">RED TEAM</span><span class="evchip">no evidence</span></summary>
+              <div class="abody"><p class="statement">Fewer than 14 of 20 "GA alternative" queries have first pages already owned by incumbent privacy vendors' pages or stale affiliate roundups.</p><div class="refuted-if">REFUTED IF <b>14 or more are saturated</b></div></div>
+            </details>
+          </div>
+          <div class="lgroup">
+            <div class="gh">Competition &amp; timing</div>
+            <details class="arow">
+              <summary><span class="title">Rivals already evaluated — and rejected?</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></span><span class="origin-tag">CANVAS</span><span class="evchip">no evidence</span></summary>
+              <div class="abody"><p class="statement">Fewer than 6 of 10 target site owners have heard of and trialled an established privacy-analytics vendor — the wedge assumes an unserved buyer, not a rejecting one.</p><div class="refuted-if">REFUTED IF <b>6 of 10 have trialled one</b></div></div>
+            </details>
+            <details class="arow">
+              <summary><span class="title">Platforms bundle analytics for free</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></span><span class="origin-tag">RED TEAM</span><span class="evchip">no evidence</span></summary>
+              <div class="abody"><p class="statement">Fewer than 6 of the 20 highest-traffic site platforms (Shopify, Webflow, Cloudflare…) ship a built-in cookieless analytics panel inside an existing paid plan.</p><div class="refuted-if">REFUTED IF <b>6 or more already bundle it</b></div></div>
+            </details>
+            <details class="arow">
+              <summary><span class="title">"Cookieless" isn't automatically compliant</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></span><span class="origin-tag">RED TEAM</span><span class="evchip">no evidence</span></summary>
+              <div class="abody"><p class="statement">Fewer than 4 of 15 recent EU/UK regulator actions state that cookie-free measurement still needs consent when IPs or fingerprints are processed — the compliance pitch survives scrutiny.</p><div class="refuted-if">REFUTED IF <b>4 or more say consent is still required</b></div></div>
+            </details>
+            <details class="arow">
+              <summary><span class="title">GA can't actually be removed</span><span class="dots"><span class="dotset"><small>i</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span><span class="dotset"><small>u</small><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></span><span class="origin-tag">RED TEAM</span><span class="evchip">5 claims</span></summary>
+              <div class="abody"><p class="statement">Fewer than 12 of 20 GA-running site owners keep it for reasons a dashboard can't replace — Ads conversions, Search Console, agency reporting. Otherwise this product is an add-on, not a switch.</p><div class="refuted-if">REFUTED IF <b>12 of 20 are locked in</b></div></div>
+            </details>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SCREEN 4 -->
+    <section class="screen" id="s4">
+      <span class="crumb">Step 4 · Discovery pack</span>
+      <h1>Go ask ten people</h1>
+      <p class="lede">Built for your top kill-shot. The threshold was fixed before any interview — that's what keeps the score honest.</p>
+      <div class="pack-focus">
+        <span class="t">Testing · Q1</span>
+        <p>Have your buyers already tried a privacy-analytics tool — and rejected it?</p>
+        <div class="thr">PRE-REGISTERED · refuted if 6 of 10 have heard of and trialled one</div>
+      </div>
+      <div class="pack-cols">
+        <div class="pcard">
+          <h3>Where they are</h3>
+          <ul>
+            <li><a href="#">r/webdev — GDPR &amp; analytics threads</a><small>reddit.com/r/webdev · active weekly</small></li>
+            <li><a href="#">Indie Hackers — analytics groups</a><small>indiehackers.com/group/analytics</small></li>
+            <li><a href="#">HN "Google Analytics alternative" threads</a><small>hn.algolia.com · 40+ threads</small></li>
+            <li><a href="#">Privacy-tools directory maintainers</a><small>github.com/pluja/awesome-privacy</small></li>
+          </ul>
+        </div>
+        <div class="pcard">
+          <h3>Who to ask</h3>
+          <ul>
+            <li><a href="#">Founder complaining GA over-reports</a><small>from a public post · not a scraped contact</small></li>
+            <li><a href="#">Dev who removed GA after a consent audit</a><small>from a public post</small></li>
+            <li><a href="#">Agency lead running EU client sites</a><small>from a public post</small></li>
+          </ul>
+        </div>
+        <div class="pcard msg">
+          <h3>What to send</h3>
+          <p>"Saw your post about dropping GA after the consent audit. I'm researching how site owners actually handle analytics under GDPR — not selling anything. 20 minutes to hear how you dealt with it?"</p>
+        </div>
+        <div class="pcard">
+          <h3>What to ask</h3>
+          <ol>
+            <li>Walk me through the last time you changed anything about analytics on your site.</li>
+            <li>What tools did you look at? What happened with each?</li>
+            <li>What did that decision cost you — time, money, traffic?</li>
+            <li>Have you paid for any analytics product, ever? Which, and why that one?</li>
+            <li>Who else was involved in keeping or removing GA?</li>
+          </ol>
+        </div>
+      </div>
+      <div class="canvas-actions">
+        <button class="btn" data-go="s5">Log a conversation →</button>
+        <button class="btn ghost" data-go="s3">← Back to report</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 5 -->
+    <section class="screen" id="s5">
+      <span class="crumb">Step 5 · Evidence</span>
+      <h1>Bring back what they said</h1>
+      <p class="lede">Paste notes or a transcript. Claims are extracted with their quotes, you approve the mapping, and the arithmetic decides what moves.</p>
+      <div class="paste">
+        <textarea>Call with Dana (runs 3 EU ecommerce sites) — "we trialled two of the privacy analytics tools last year, honestly both felt like paying for less. We kept GA because ads attribution needs it anyway…"</textarea>
+        <div class="dropzone" role="button" tabindex="0">
+          Or drop the call transcript
+          <span class="exts">.txt .md .pdf .docx</span>
+        </div>
+        <div class="filechip">dana-call-transcript.docx <b>✓ text extracted — quotes will be verified against it</b></div>
+        <div style="margin-top:14px; display:flex; justify-content:flex-end"><button class="btn">Extract claims →</button></div>
+      </div>
+      <div class="proposals">
+        <div class="prop">
+          <div class="q"><b>REFUTES · Rivals already rejected?</b> Dana trialled two privacy-analytics tools and rejected both as "paying for less."
+            <span class="quote">"we trialled two of the privacy analytics tools last year, honestly both felt like paying for less"</span>
+            <span class="map">→ gen-a6 · primary_conversation · quote verified in transcript</span>
+          </div>
+          <div class="ok-btns"><button class="yes">Approve</button><button>Skip</button></div>
+        </div>
+        <div class="prop">
+          <div class="q"><b>SUPPORTS · GA can't be removed</b> Dana keeps GA because ads attribution depends on it.
+            <span class="quote">"we kept GA because ads attribution needs it anyway"</span>
+            <span class="map">→ rt-a3 · primary_conversation · quote verified in transcript</span>
+          </div>
+          <div class="ok-btns"><button class="yes">Approve</button><button>Skip</button></div>
+        </div>
+      </div>
+      <div class="movement">
+        <h3>After approving — what moved and why</h3>
+        <div class="moves">
+          <div class="move"><span class="k">Evidence</span><span class="delta">0.0 → <b>6.8</b></span><span class="why">2 primary claims · 2 assumptions touched</span></div>
+          <div class="move"><span class="k">Cap</span><span class="delta">30.0 → <b>34.8</b></span><span class="why">cap = 30 + 0.7 × evidence</span></div>
+          <div class="move"><span class="k">Composite</span><span class="delta">30.0 → <b>33.1</b></span><span class="why">movement attributed to ev-c1, ev-c2</span></div>
+          <div class="move"><span class="k">Wedge</span><span class="delta">50.0 → <b>44.9</b></span><span class="why">Q1 evidence points the wrong way for the wedge</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll("[data-go]").forEach(el => {
+    el.addEventListener("click", () => {
+      const id = el.getAttribute("data-go");
+      document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id));
+      document.querySelectorAll(".step").forEach(s => s.classList.toggle("active", s.getAttribute("data-go") === id));
+      window.scrollTo({ top: 0 });
+    });
+  });
+  document.querySelectorAll(".cfil").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const t = chip.getAttribute("data-t");
+      document.querySelectorAll(".cfil").forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
+      document.querySelectorAll(".crow").forEach(row => {
+        row.style.display = (t === "all" || row.getAttribute("data-threat") === t) ? "" : "none";
+      });
+    });
+  });
+</script>
