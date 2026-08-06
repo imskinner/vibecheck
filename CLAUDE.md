@@ -193,6 +193,7 @@ loud rather than shipping anyway.
 | `npm run typecheck` | `tsc --noEmit`. |
 | `npm run eval` | Headless golden-set run. `-- --json` for machine-readable output. |
 | `npm run prompt:assumptions` | Renders the assumption-generation prompt against a hardcoded idea. Makes no API call. |
+| `npm run assumptions:live` | Runs assumption generation against the real API for one hardcoded idea. **Spends money.** Needs `ANTHROPIC_API_KEY` or an `ant auth login` profile. |
 | `npm run db:generate` | Generates migration SQL from the schema. Needs no database. |
 | `npm run migrate` | Applies migrations. Needs `DATABASE_URL` — nothing in M0 does. |
 

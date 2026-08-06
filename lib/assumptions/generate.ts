@@ -19,9 +19,12 @@
 
 import type { IdeaCanvas } from '../canvas/types'
 import type { ModelClient } from '../research/model'
-import type { Assumption, FalsificationCriterion, Rating } from '../scoring/types'
-import { ASSUMPTION_CATEGORIES, COMPARATORS } from '../scoring/types'
-import { checkFalsifiability } from './falsifiability'
+import type { Assumption } from '../scoring/types'
+import {
+  parseEmittedAssumptions,
+  partitionByFalsifiability,
+  type RejectedEmission,
+} from './emission'
 import {
   EMIT_ASSUMPTIONS_TOOL,
   MODEL_ID,
@@ -31,17 +34,14 @@ import {
   SYSTEM_PROMPT,
 } from './prompts/generate-assumptions.v1'
 
+export type { RejectedEmission } from './emission'
+
 export interface GenerateOptions {
   model: ModelClient
   /** Regeneration calls after the initial one. Each retries only the still-failing statements. */
   maxRegenerationRounds?: number
   makeAssumptionId?: (index: number) => string
   modelId?: string
-}
-
-export interface RejectedEmission {
-  reason: string
-  raw: unknown
 }
 
 export interface DiscardedStatement {
@@ -59,100 +59,8 @@ export interface GenerationResult {
   warnings: string[]
 }
 
-/** What the model is allowed to decide. Everything else on Assumption is owned by this code. */
-interface Emitted {
-  statement: string
-  category: Assumption['category']
-  impact: Rating
-  uncertainty: Rating
-  test_cost: Rating
-  falsification_criterion: FalsificationCriterion
-}
-
 const MIN_ASSUMPTIONS = 5
 const defaultId = (index: number) => `gen-a${index + 1}`
-
-const isObject = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v)
-const isRating = (v: unknown): v is Rating => typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= 5
-
-function parseCriterion(raw: unknown): FalsificationCriterion | null {
-  if (!isObject(raw)) return null
-  const { applies_to, observation, metric, comparator, threshold, sample_size } = raw
-  if (typeof applies_to !== 'string' || applies_to.trim() === '') return null
-  if (typeof observation !== 'string' || observation.trim() === '') return null
-  if (typeof metric !== 'string' || metric.trim() === '') return null
-  if (!COMPARATORS.includes(comparator as never)) return null
-  if (typeof threshold !== 'number' || !Number.isFinite(threshold)) return null
-  if (typeof sample_size !== 'number' || !Number.isInteger(sample_size) || sample_size < 1) return null
-  return {
-    applies_to: applies_to.trim(),
-    observation: observation.trim(),
-    metric: metric.trim(),
-    comparator: comparator as FalsificationCriterion['comparator'],
-    threshold,
-    sample_size,
-  }
-}
-
-function parseEmission(raw: unknown): { valid: Emitted[]; rejected: RejectedEmission[] } {
-  const valid: Emitted[] = []
-  const rejected: RejectedEmission[] = []
-
-  const items = isObject(raw) && Array.isArray(raw['assumptions']) ? raw['assumptions'] : null
-  if (items === null) return { valid, rejected: [{ reason: 'output had no assumptions array', raw }] }
-
-  for (const item of items) {
-    if (!isObject(item)) {
-      rejected.push({ reason: 'assumption is not an object', raw: item })
-      continue
-    }
-    const statement = item['statement']
-    if (typeof statement !== 'string' || statement.trim() === '') {
-      rejected.push({ reason: 'statement is empty', raw: item })
-      continue
-    }
-    const category = item['category']
-    if (!ASSUMPTION_CATEGORIES.includes(category as never)) {
-      rejected.push({ reason: `category '${String(category)}' is not valid`, raw: item })
-      continue
-    }
-    let badRating: string | null = null
-    for (const field of ['impact', 'uncertainty', 'test_cost'] as const) {
-      if (!isRating(item[field])) badRating = `${field} must be an integer 1-5`
-    }
-    if (badRating) {
-      rejected.push({ reason: badRating, raw: item })
-      continue
-    }
-    const criterion = parseCriterion(item['falsification_criterion'])
-    if (criterion === null) {
-      rejected.push({ reason: 'falsification_criterion is malformed', raw: item })
-      continue
-    }
-    valid.push({
-      statement: statement.trim(),
-      category: category as Assumption['category'],
-      impact: item['impact'] as Rating,
-      uncertainty: item['uncertainty'] as Rating,
-      test_cost: item['test_cost'] as Rating,
-      falsification_criterion: criterion,
-    })
-  }
-
-  return { valid, rejected }
-}
-
-function partition(emitted: Emitted[]): { passing: Emitted[]; failing: { emitted: Emitted; reasons: string[] }[] } {
-  const passing: Emitted[] = []
-  const failing: { emitted: Emitted; reasons: string[] }[] = []
-  for (const e of emitted) {
-    const check = checkFalsifiability(e.statement)
-    if (check.ok) passing.push(e)
-    else failing.push({ emitted: e, reasons: check.failures.map((f) => f.message) })
-  }
-  return { passing, failing }
-}
 
 export async function generateAssumptions(
   canvas: IdeaCanvas,
@@ -172,10 +80,10 @@ export async function generateAssumptions(
     tool: EMIT_ASSUMPTIONS_TOOL,
   })
 
-  const parsed = parseEmission(initial)
+  const parsed = parseEmittedAssumptions(initial, 'assumptions')
   rejected.push(...parsed.rejected)
 
-  let { passing: kept, failing } = partition(parsed.valid)
+  let { passing: kept, failing } = partitionByFalsifiability(parsed.valid)
   let rounds = 0
 
   while (failing.length > 0 && rounds < maxRounds) {
@@ -191,10 +99,10 @@ export async function generateAssumptions(
       tool: regenerationTool(failing.length),
     })
 
-    const reparsed = parseEmission(regen)
+    const reparsed = parseEmittedAssumptions(regen, 'assumptions')
     rejected.push(...reparsed.rejected)
 
-    const next = partition(reparsed.valid)
+    const next = partitionByFalsifiability(reparsed.valid)
     kept = [...kept, ...next.passing]
     // Only the fresh failures carry forward. The statements they replaced are gone either way —
     // regeneration is a rewrite, not an edit history.
