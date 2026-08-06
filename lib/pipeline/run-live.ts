@@ -150,6 +150,24 @@ async function main(): Promise<void> {
     line(`     refuted if: ${c.metric} ${c.comparator} ${c.threshold} of ${c.sample_size}`)
   }
 
+  const landscape = result.competitive.landscape
+  if (landscape !== null) {
+    line()
+    line('  COMPETITIVE LANDSCAPE — informs what to test, never the score')
+    rule()
+    line(`  axes: x = ${landscape.axes.xLabel} · y = ${landscape.axes.yLabel}`)
+    line(`  the idea sits at (${landscape.ideaPosition.x}, ${landscape.ideaPosition.y})`)
+    line()
+    for (const c of landscape.competitors) {
+      const basis = c.basis === 'claims' ? `${c.claimIds.length} claim(s)` : 'inferred'
+      line(`  [${c.threat.toUpperCase().padEnd(8)}] ${c.name} (${c.category}, ${basis}) at (${c.x}, ${c.y})`)
+      line(`             ${c.what}`)
+      line(`             threat: ${c.threatReason}`)
+    }
+    line()
+    line(`  empty space: ${landscape.emptySpace}`)
+  }
+
   if (result.warnings.length > 0) {
     line()
     for (const w of result.warnings) line(`  ⚠ ${w}`)
