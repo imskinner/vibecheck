@@ -173,6 +173,63 @@ export function renderUserMessage(canvas: IdeaCanvas): string {
 }
 
 /**
+ * Regeneration, not repair. PRD §5.2.1: a model asked to patch its own vague statement reliably
+ * just adds adjectives to it, so failing statements are rewritten from scratch with the checker's
+ * specific complaints in front of the model. The kept statements are listed so a replacement does
+ * not duplicate ground the ledger already covers.
+ */
+export function renderRegenerationMessage(
+  canvas: IdeaCanvas,
+  keptStatements: string[],
+  failed: { statement: string; reasons: string[] }[],
+): string {
+  return [
+    'Some of your assumption statements failed the falsifiability check and must be REPLACED.',
+    '',
+    'Write a completely new statement for each failure below — do not patch the old wording.',
+    'Each replacement must name a specific population, describe observable past behaviour, and',
+    'carry a threshold a specific observation could contradict.',
+    '',
+    'FAILED STATEMENTS:',
+    ...failed.flatMap((f) => [
+      `- "${f.statement}"`,
+      ...f.reasons.map((reason) => `    failed because: ${reason}`),
+    ]),
+    '',
+    'The ledger already contains these statements. Do not duplicate them:',
+    ...keptStatements.map((s) => `- "${s}"`),
+    '',
+    `For context, the idea again:`,
+    renderUserMessage(canvas),
+    '',
+    `Emit exactly ${failed.length} replacement assumption${failed.length === 1 ? '' : 's'}.`,
+  ].join('\n')
+}
+
+/**
+ * The emit tool with the item count pinned to the number of replacements requested. The main
+ * tool's 5–9 bounds would contradict a request for one replacement, and a model shown a schema
+ * that disagrees with its instructions reliably follows the schema.
+ */
+export function regenerationTool(count: number): {
+  name: string
+  description: string
+  input_schema: unknown
+} {
+  const schema = EMIT_ASSUMPTIONS_TOOL.input_schema
+  return {
+    name: EMIT_ASSUMPTIONS_TOOL.name,
+    description: `Emit exactly ${count} replacement assumption(s). This is the only way to return output.`,
+    input_schema: {
+      ...schema,
+      properties: {
+        assumptions: { ...schema.properties.assumptions, minItems: count, maxItems: count },
+      },
+    },
+  }
+}
+
+/**
  * Forced tool call rather than free text. Defends against: prose wrapping, preamble, and the
  * markdown-fenced-JSON parsing failures that come with them.
  */
