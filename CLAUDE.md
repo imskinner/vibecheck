@@ -191,7 +191,9 @@ loud rather than shipping anyway.
 | `npm test -- -t "cap"` | Single test, by name. |
 | `npm run test:watch` | Watch mode. |
 | `npm run typecheck` | `tsc --noEmit`. |
-| `npm run eval` | Headless golden-set run. `-- --json` for machine-readable output. |
+| `npm run eval` | Headless golden-set run over the fixture ledgers. `-- --json` for machine-readable output. |
+| `npm run eval:blind -- --pilot\|--all\|--report <dir>` | Blind pipeline runs over real golden-set entries, `notAfter` pinned to each `t0`. Artifacts land in `evals/runs/`. **Spends money** except `--report`. Separation is measured on the weighted mean — composite is degenerate in desk-only runs (PRD §7.2). |
+| `npm run eval:fabrication -- --dir <run dir>` | Samples desk claims from run artifacts and judges each against its stored snapshot. Kill criterion 3's number. **Spends money.** |
 | `npm run prompt:assumptions` | Renders the assumption-generation prompt against a hardcoded idea. Makes no API call. |
 | `npm run assumptions:live` | Runs assumption generation against the real API for one hardcoded idea. **Spends money.** Needs `ANTHROPIC_API_KEY` or an `ant auth login` profile. |
 | `npm run pipeline:live -- --description "..."` | The whole loop against the real API: canvas → assumptions → red team → research → score. Extracted canvases stop at the §5.1 gate until re-run with `--yes`. **Spends money.** |
