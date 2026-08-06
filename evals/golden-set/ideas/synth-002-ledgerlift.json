@@ -1,0 +1,134 @@
+{
+  "id": "synth-002-ledgerlift",
+  "schema_version": 1,
+  "layer1": {
+    "name": "LedgerLift",
+    "one_liner": "Bank-feed reconciliation for bookkeepers handling 20+ small-business clients.",
+    "description": "A reconciliation layer that sits on top of existing accounting software and clears the repetitive month-end matching work bookkeepers do by hand across many client books.",
+    "t0": "2021-09-01",
+    "outcome": "succeeded",
+    "outcome_date": "2024-05-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The cap releasing. Primary conversations cover the load-bearing assumptions, Evidence Quality lands around 81, the cap rises above the weighted mean and stops binding — so the composite is set by the evidence rather than by the ceiling. Also pins that one uncovered assumption (competition) still drags both Evidence Quality and its own sub-score.",
+    "assumptions": [
+      {
+        "id": "ll-a1",
+        "statement": "Bookkeepers with 20+ client books spend more than 6 hours per month-end on manual transaction matching",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent bookkeepers managing 20 or more client books",
+          "observation": "walk through their last month-end close and time the matching step",
+          "metric": "count who spent 6+ hours on manual matching",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 4
+        }
+      },
+      {
+        "id": "ll-a2",
+        "statement": "Bookkeeping practices already pay for at least one per-seat tool above $40/month",
+        "category": "willingness_to_pay",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 3,
+        "test_cost": 1,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent bookkeeping practices with 2 or more staff",
+          "observation": "ask them to list their current software line items and cost",
+          "metric": "count already paying above $40/seat/month for a workflow tool",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "ll-a3",
+        "statement": "At least 2 in 10 bookkeepers contacted through accounting-software partner directories reply to a cold outreach",
+        "category": "access",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent bookkeepers listed in accounting-software partner directories",
+          "observation": "cold outreach to 30 listed practices and measure reply rate",
+          "metric": "count of replies leading to a conversation",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "ll-a4",
+        "statement": "The incumbent accounting platforms will not ship equivalent multi-client matching within 18 months",
+        "category": "competition",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 4,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the two dominant small-business accounting platforms",
+          "observation": "track their public roadmaps and partner-conference announcements",
+          "metric": "count shipping equivalent multi-client matching",
+          "comparator": ">=",
+          "threshold": 1,
+          "sample_size": 2
+        }
+      },
+      {
+        "id": "ll-a5",
+        "statement": "The founder can get at least 2 warm introductions to practising bookkeepers per week without paid channels",
+        "category": "execution",
+        "origin": "founder",
+        "impact": 3,
+        "uncertainty": 2,
+        "test_cost": 1,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "the founder's existing network",
+          "observation": "request introductions and count those that convert to a call",
+          "metric": "count of warm introductions converting to a call",
+          "comparator": "<",
+          "threshold": 1,
+          "sample_size": 2
+        }
+      }
+    ],
+    "claims": [
+      { "id": "ll-c1", "assumption_id": "ll-a1", "text": "Bookkeeper with 34 books describes two full days of matching every month-end.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c2", "assumption_id": "ll-a1", "text": "Practice owner reports hiring a part-time contractor purely to clear matching backlog.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-11", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c3", "assumption_id": "ll-a1", "text": "Bookkeeper describes matching as the single reason they cap client count at 25.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-12", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c4", "assumption_id": "ll-a1", "text": "Bookkeeper reports under 3 hours because their client mix is unusually simple.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-12", "retrieved_text": null, "confidence": "medium" },
+      { "id": "ll-c5", "assumption_id": "ll-a1", "text": "Trade association survey summary reports month-end close as the top time sink.", "stance": "supports", "source_url": "example://association/survey-2021", "source_type": "public_post", "retrieved_at": "2021-08-05", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" },
+
+      { "id": "ll-c6", "assumption_id": "ll-a2", "text": "Practice lists four paid tools above $40/seat in their monthly stack.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-13", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c7", "assumption_id": "ll-a2", "text": "Owner describes software as a pass-through cost billed to clients.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-16", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c8", "assumption_id": "ll-a2", "text": "Second practice confirms per-seat spend above the threshold.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-17", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "ll-c9", "assumption_id": "ll-a3", "text": "Directory outreach produced a reply and a booked call the same week.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-18", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c10", "assumption_id": "ll-a3", "text": "Practice community moderator confirms vendor posts are permitted with disclosure.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-19", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c11", "assumption_id": "ll-a3", "text": "Third practice reached through the same directory route without a warm intro.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-20", "retrieved_text": null, "confidence": "medium" },
+      { "id": "ll-c12", "assumption_id": "ll-a3", "text": "Partner directory is public and filterable by practice size.", "stance": "supports", "source_url": "example://accounting-platform/partner-directory", "source_type": "company_page", "retrieved_at": "2021-08-04", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+
+      { "id": "ll-c13", "assumption_id": "ll-a4", "text": "Incumbent's published roadmap lists multi-entity reporting for the coming year.", "stance": "refutes", "source_url": "example://accounting-platform/roadmap", "source_type": "company_page", "retrieved_at": "2021-08-06", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "ll-c14", "assumption_id": "ll-a4", "text": "Second platform's partner programme actively encourages third-party tools in this workflow.", "stance": "context", "source_url": "example://accounting-platform-b/partners", "source_type": "company_page", "retrieved_at": "2021-08-06", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" },
+
+      { "id": "ll-c15", "assumption_id": "ll-a5", "text": "Two introductions requested, two calls booked within a week.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-09", "retrieved_text": null, "confidence": "high" },
+      { "id": "ll-c16", "assumption_id": "ll-a5", "text": "Former colleague now runs a practice and offered to forward the request.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-08-09", "retrieved_text": null, "confidence": "high" }
+    ]
+  }
+}

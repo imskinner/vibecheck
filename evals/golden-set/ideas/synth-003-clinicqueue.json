@@ -1,0 +1,133 @@
+{
+  "id": "synth-003-clinicqueue",
+  "schema_version": 1,
+  "layer1": {
+    "name": "ClinicQueue",
+    "one_liner": "No-show reduction for independent physiotherapy clinics.",
+    "description": "Automated appointment confirmation and waitlist backfill for single-site physiotherapy clinics, priced per location. The pain is real and expensive; the question is whether these clinics can be reached repeatably at a cost the price point supports.",
+    "t0": "2022-03-01",
+    "outcome": "died",
+    "outcome_date": "2023-11-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The Market Access trap — the dimension the PRD says competitors ignore, and therefore the one whose behaviour most needs pinning before anything is built on it. Problem Severity resolves near 90 on real primary evidence and the idea still scores in the high 40s, because a refuted access assumption carries equal top weight. If a future change lets a strong problem drag the composite up past a dead access channel, this fixture is what should fail.",
+    "assumptions": [
+      {
+        "id": "cq-a1",
+        "statement": "Independent physiotherapy clinics lose more than 8% of booked revenue per month to no-shows",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "single-site independent physiotherapy clinics",
+          "observation": "ask the practice manager to pull last quarter's no-show rate from their booking system",
+          "metric": "count reporting above 8% of booked revenue lost",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 5
+        }
+      },
+      {
+        "id": "cq-a2",
+        "statement": "Clinic owners already pay for at least one per-location subscription above $80/month",
+        "category": "willingness_to_pay",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 3,
+        "test_cost": 1,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "single-site independent physiotherapy clinic owners",
+          "observation": "ask them to list current per-location software spend",
+          "metric": "count paying above $80/month for a per-location tool",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 4
+        }
+      },
+      {
+        "id": "cq-a3",
+        "statement": "Clinic owners can be reached repeatably for under $200 in acquisition cost per booked conversation",
+        "category": "access",
+        "origin": "red_team",
+        "impact": 5,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "refuted",
+        "falsification_criterion": {
+          "applies_to": "single-site independent physiotherapy clinic owners",
+          "observation": "attempt direct outreach across email, phone and professional associations, and track cost per booked conversation",
+          "metric": "count of channels producing a booked conversation under $200",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 5
+        }
+      },
+      {
+        "id": "cq-a4",
+        "statement": "Incumbent clinic booking systems will not bundle automated waitlist backfill within 18 months",
+        "category": "competition",
+        "origin": "red_team",
+        "impact": 3,
+        "uncertainty": 4,
+        "test_cost": 3,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the three most-used clinic booking systems in this segment",
+          "observation": "review pricing pages and release notes for waitlist backfill",
+          "metric": "count of incumbents shipping waitlist backfill",
+          "comparator": ">=",
+          "threshold": 1,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "cq-a5",
+        "statement": "At least 6 of the first 10 clinics complete onboarding without an in-person visit",
+        "category": "execution",
+        "origin": "founder",
+        "impact": 2,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the first ten onboarded clinics",
+          "observation": "track how many completed onboarding without an on-site visit",
+          "metric": "count onboarded remotely",
+          "comparator": "<",
+          "threshold": 6,
+          "sample_size": 10
+        }
+      }
+    ],
+    "claims": [
+      { "id": "cq-c1", "assumption_id": "cq-a1", "text": "Practice manager pulled a 11% no-show rate for the previous quarter.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-08", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c2", "assumption_id": "cq-a1", "text": "Owner describes holding two slots empty daily as a deliberate buffer for no-shows.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-09", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c3", "assumption_id": "cq-a1", "text": "Second clinic reports roughly one in eight appointments lost.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c4", "assumption_id": "cq-a1", "text": "Third clinic reports 9% and describes it as their largest controllable loss.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-11", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c5", "assumption_id": "cq-a1", "text": "Fourth clinic reports under 5% after hiring a dedicated front-desk role.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-14", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "cq-c6", "assumption_id": "cq-a2", "text": "Clinic lists booking software and a payments tool, both above the threshold.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-15", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c7", "assumption_id": "cq-a2", "text": "Owner confirms per-location billing is normal in the segment.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-16", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c8", "assumption_id": "cq-a2", "text": "Third clinic names three per-location subscriptions above $80.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-17", "retrieved_text": null, "confidence": "medium" },
+      { "id": "cq-c9", "assumption_id": "cq-a2", "text": "Published pricing for the dominant booking system sits well above the threshold.", "stance": "supports", "source_url": "example://booking-system/pricing", "source_type": "company_page", "retrieved_at": "2022-02-02", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+
+      { "id": "cq-c10", "assumption_id": "cq-a3", "text": "Owner explains the front desk screens all unsolicited calls and vendor email goes to a shared inbox nobody reads.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-18", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c11", "assumption_id": "cq-a3", "text": "Professional association confirms it does not permit vendor outreach to its member list.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-21", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c12", "assumption_id": "cq-a3", "text": "Second owner describes buying decisions happening only through their existing booking vendor.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-22", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c13", "assumption_id": "cq-a3", "text": "Thirty cold emails produced one reply and no booked conversation.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-23", "retrieved_text": null, "confidence": "high" },
+      { "id": "cq-c14", "assumption_id": "cq-a3", "text": "One owner did respond to a referral from a peer clinic, at no acquisition cost.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-02-24", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "cq-c15", "assumption_id": "cq-a4", "text": "The dominant booking system's release notes mention a waitlist feature in beta.", "stance": "refutes", "source_url": "example://booking-system/release-notes", "source_type": "company_page", "retrieved_at": "2022-02-03", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "cq-c16", "assumption_id": "cq-a4", "text": "A second booking vendor's pricing page shows no waitlist capability at any tier.", "stance": "supports", "source_url": "example://booking-system-b/pricing", "source_type": "company_page", "retrieved_at": "2022-02-03", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" }
+    ]
+  }
+}

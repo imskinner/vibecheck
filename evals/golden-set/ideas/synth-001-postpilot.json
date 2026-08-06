@@ -1,0 +1,206 @@
+{
+  "id": "synth-001-postpilot",
+  "schema_version": 1,
+  "layer1": {
+    "name": "PostPilot",
+    "one_liner": "AI that drafts weekly LinkedIn posts for B2B founders.",
+    "description": "A tool that ingests a founder's product notes and drafts five LinkedIn posts a week in their voice, with a scheduling calendar. Positioned at $29/month against manual drafting.",
+    "t0": "2023-06-01",
+    "outcome": "died",
+    "outcome_date": "2024-02-15",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The headline behaviour: thorough desk research, zero primary conversations. Evidence Quality is 0, so the cap sits at 30 and binds — the weighted mean lands around 36 and the composite is held to 30. Note the cap is a ceiling, not a floor: a weaker ledger than this one scores below 30, which composite.test.ts pins directly.",
+    "assumptions": [
+      {
+        "id": "pp-a1",
+        "statement": "B2B founders who post weekly on LinkedIn spend more than 3 hours a week drafting posts",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "B2B software founders posting to LinkedIn at least weekly",
+          "observation": "ask them to walk through their last four posts and time each one",
+          "metric": "count who spent 3+ hours per week drafting",
+          "comparator": "<",
+          "threshold": 4,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "pp-a2",
+        "statement": "No incumbent social scheduling tool ships built-in AI post drafting within 12 months of launch",
+        "category": "competition",
+        "origin": "red_team",
+        "impact": 5,
+        "uncertainty": 2,
+        "test_cost": 3,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the top 5 social scheduling tools by market share",
+          "observation": "check each product's changelog and pricing page for AI drafting",
+          "metric": "count of incumbents shipping AI drafting",
+          "comparator": ">=",
+          "threshold": 1,
+          "sample_size": 5
+        }
+      },
+      {
+        "id": "pp-a3",
+        "statement": "At least 4 in 10 target founders already pay for a standalone drafting tool, unbundled from scheduling",
+        "category": "willingness_to_pay",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "B2B software founders posting to LinkedIn at least weekly",
+          "observation": "ask what they currently pay for content tooling and what they cancelled",
+          "metric": "count who currently pay for a drafting-only tool",
+          "comparator": "<",
+          "threshold": 4,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "pp-a4",
+        "statement": "LinkedIn organic posting reaches at least 30 qualified founders per week at zero paid cost",
+        "category": "access",
+        "origin": "red_team",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "a new account posting daily for four weeks",
+          "observation": "measure qualified profile views per week from organic posts",
+          "metric": "qualified founder reach per week",
+          "comparator": "<",
+          "threshold": 30,
+          "sample_size": 4
+        }
+      }
+    ],
+    "claims": [
+      {
+        "id": "pp-c1",
+        "assumption_id": "pp-a1",
+        "text": "A founder describes batching a week of posts in about forty minutes on a Sunday.",
+        "stance": "refutes",
+        "source_url": "example://forum/thread/1",
+        "source_type": "public_post",
+        "retrieved_at": "2023-05-14",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "medium"
+      },
+      {
+        "id": "pp-c2",
+        "assumption_id": "pp-a1",
+        "text": "A founder describes drafting as the reason they stopped posting entirely.",
+        "stance": "supports",
+        "source_url": "example://forum/thread/2",
+        "source_type": "public_post",
+        "retrieved_at": "2023-05-14",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "medium"
+      },
+      {
+        "id": "pp-c3",
+        "assumption_id": "pp-a2",
+        "text": "A major scheduling incumbent lists AI post generation on its pricing page at no extra cost.",
+        "stance": "refutes",
+        "source_url": "example://incumbent-a/pricing",
+        "source_type": "company_page",
+        "retrieved_at": "2023-05-20",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "high"
+      },
+      {
+        "id": "pp-c4",
+        "assumption_id": "pp-a2",
+        "text": "A second incumbent's changelog shows AI drafting shipped to all plans.",
+        "stance": "refutes",
+        "source_url": "example://incumbent-b/changelog",
+        "source_type": "company_page",
+        "retrieved_at": "2023-05-20",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "high"
+      },
+      {
+        "id": "pp-c5",
+        "assumption_id": "pp-a2",
+        "text": "A third tool in the category bundles drafting into its entry tier.",
+        "stance": "refutes",
+        "source_url": "example://incumbent-c/pricing",
+        "source_type": "company_page",
+        "retrieved_at": "2023-05-21",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "high"
+      },
+      {
+        "id": "pp-c6",
+        "assumption_id": "pp-a3",
+        "text": "Category reviews cluster around cancellation after one billing cycle.",
+        "stance": "refutes",
+        "source_url": "example://reviews/category/social-ai",
+        "source_type": "review_site",
+        "retrieved_at": "2023-05-22",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "medium"
+      },
+      {
+        "id": "pp-c7",
+        "assumption_id": "pp-a3",
+        "text": "Free tiers from incumbents cover the same drafting job at zero cost.",
+        "stance": "refutes",
+        "source_url": "example://incumbent-a/pricing",
+        "source_type": "company_page",
+        "retrieved_at": "2023-05-22",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "high"
+      },
+      {
+        "id": "pp-c8",
+        "assumption_id": "pp-a4",
+        "text": "Multiple builders report organic reach collapsing for accounts under 1000 followers.",
+        "stance": "refutes",
+        "source_url": "example://forum/thread/9",
+        "source_type": "public_post",
+        "retrieved_at": "2023-05-25",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "high"
+      },
+      {
+        "id": "pp-c9",
+        "assumption_id": "pp-a4",
+        "text": "Platform coverage describes a ranking change that de-prioritises outbound links.",
+        "stance": "refutes",
+        "source_url": "example://news/platform-ranking-change",
+        "source_type": "news",
+        "retrieved_at": "2023-05-26",
+        "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.",
+        "confidence": "medium"
+      },
+      {
+        "id": "pp-c10",
+        "assumption_id": "pp-a4",
+        "text": "No evidence found either way on reach for accounts posting in this niche specifically.",
+        "stance": "context",
+        "source_url": null,
+        "source_type": "model_inference",
+        "retrieved_at": "2023-05-26",
+        "retrieved_text": null,
+        "confidence": "low"
+      }
+    ]
+  }
+}
