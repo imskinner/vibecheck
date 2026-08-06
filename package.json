@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "eval": "tsx evals/runners/run-golden-set.ts",
     "eval:blind": "tsx evals/runners/run-blind.ts",
+    "eval:fabrication": "tsx evals/runners/run-fabrication.ts",
     "prompt:assumptions": "tsx lib/assumptions/prompts/preview.ts",
     "assumptions:live": "tsx lib/assumptions/run-live.ts",
     "pipeline:live": "tsx lib/pipeline/run-live.ts",
