@@ -11,8 +11,8 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { createAnthropicModelClient } from '../../lib/research/anthropic-client'
-import type { Claim } from '../../lib/scoring/types'
-import { checkFabrication, eligibleClaims } from './fabrication'
+import type { Assumption, Claim } from '../../lib/scoring/types'
+import { checkFabrication, type VerifiableClaim } from './fabrication'
 
 const line = (s = '') => process.stdout.write(s + '\n')
 
@@ -31,30 +31,45 @@ async function main(): Promise<void> {
   const sampleSize = Number(arg('sample') ?? '40')
   const seed = Number(arg('seed') ?? '20260806')
 
-  const claims: Claim[] = readdirSync(dir)
+  const items: VerifiableClaim[] = readdirSync(dir)
     .filter((f) => f.endsWith('.json') && f !== 'summary.json' && f !== 'fabrication.json')
     .flatMap((f) => {
-      const artifact = JSON.parse(readFileSync(join(dir, f), 'utf8')) as { ledger?: { claims?: Claim[] } }
-      return artifact.ledger?.claims ?? []
+      const artifact = JSON.parse(readFileSync(join(dir, f), 'utf8')) as {
+        ledger?: { claims?: Claim[]; assumptions?: Assumption[] }
+      }
+      const statements = new Map(
+        (artifact.ledger?.assumptions ?? []).map((a) => [a.id, a.statement]),
+      )
+      return (artifact.ledger?.claims ?? []).flatMap((claim) => {
+        const assumptionStatement = statements.get(claim.assumption_id)
+        return assumptionStatement === undefined ? [] : [{ claim, assumptionStatement }]
+      })
     })
 
   const model = createAnthropicModelClient()
-  const report = await checkFabrication(claims, { model, sampleSize, seed })
+  const report = await checkFabrication(items, { model, sampleSize, seed })
 
   line()
-  line('  FABRICATION CHECK')
+  line('  FABRICATION CHECK (verify-claim v2 — content and stance judged separately)')
   line('  ' + '─'.repeat(96))
   line(`  eligible desk claims ${report.eligible} · sampled ${report.sampled} (seed ${seed})`)
-  line(`  supported ${report.supported} · unsupported ${report.unsupported} · insufficient ${report.insufficient} · unusable ${report.unusable}`)
-  if (report.rate !== null) {
-    const pct = (report.rate * 100).toFixed(1)
+  line(
+    `  content: supported ${report.contentSupported} · unsupported ${report.contentUnsupported} · insufficient ${report.contentInsufficient}` +
+      ` | stance: correct ${report.stanceCorrect} · inverted ${report.stanceInverted} · unclear ${report.stanceUnclear}` +
+      ` | unusable ${report.unusable}`,
+  )
+  if (report.fabricationRate !== null) {
+    const pct = (report.fabricationRate * 100).toFixed(1)
     line(`  fabrication rate: ${pct}%  (kill criterion 3: must stay under 5%)`)
-    if (report.rate >= 0.05) line('  ⚠ ABOVE THE KILL LINE — say so out loud, do not ship past it.')
+    if (report.fabricationRate >= 0.05) line('  ⚠ ABOVE THE KILL LINE — say so out loud, do not ship past it.')
   } else {
     line('  fabrication rate: not measurable (nothing decidable sampled)')
   }
-  for (const v of report.verifications.filter((x) => x.verdict !== 'supported')) {
-    line(`    [${v.verdict}] ${v.claimId} (${v.assumptionId}) — ${v.reason}`)
+  if (report.stanceErrorRate !== null) {
+    line(`  stance error rate: ${(report.stanceErrorRate * 100).toFixed(1)}%  (extractor miscategorisation — tracked separately)`)
+  }
+  for (const v of report.verifications.filter((x) => x.content !== 'supported' || x.stance !== 'correct')) {
+    line(`    [content ${v.content} · stance ${v.stance}] ${v.claimId} (${v.assumptionId}) — ${v.reason}`)
   }
 
   const usage = model.usage()
