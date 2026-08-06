@@ -78,6 +78,9 @@ const dispatchModel = () =>
           new_assumptions: [threat(), generated({ statement: 'No incumbent agent harness ships decision persistence within 12 months', category: 'timing' })],
           uncertainty_raises: [{ assumption_id: 'gen-a1', uncertainty: 5, reason: 'Nobody has timed this.' }],
         }
+      case 'emit_search_queries':
+        // Cover only gen-a1; every other assumption exercises the baseline fallback path.
+        return { queries: [{ assumption_id: 'gen-a1', searches: [['context', 'loss'], ['agent', 'memory']] }] }
       case 'emit_claims':
         // The access assumption comes back empty — the honest-negative path end to end.
         if (request.userMessage.includes(ACCESS_STATEMENT)) return { claims: [] }
@@ -167,6 +170,7 @@ describe('runPipeline', () => {
     expect(result.provenance.promptVersions).toEqual({
       'generate-assumptions': 'v1',
       'red-team': 'v1',
+      'generate-queries': 'v1',
       'extract-claims': 'v1',
     })
     expect(result.provenance.modelIds['generate-assumptions']).toBe('claude-opus-5')
@@ -184,6 +188,8 @@ describe('runPipeline', () => {
           return { assumptions: canvasLedger().slice(2) }
         case 'emit_red_team_findings':
           return { new_assumptions: [threat(), generated({ statement: 'No incumbent agent harness ships decision persistence within 12 months', category: 'timing' })] }
+        case 'emit_search_queries':
+          return { queries: [] }
         case 'emit_claims':
           return { claims: [{ document_index: 0, text: 'A post.', stance: 'supports', confidence: 'medium' }] }
         default:
@@ -202,6 +208,30 @@ describe('runPipeline', () => {
       runPipeline(canvas, { model: dispatchModel(), registry: stubRegistry(), retrievedAt: AT })
 
     expect(await run()).toEqual(await run())
+  })
+
+  it('uses model-generated queries and reports every baseline fallback', async () => {
+    const searched: string[][] = []
+    const registry = new AdapterRegistry().register({
+      id: 'stub',
+      compliance: 'public_api',
+      legalNotes: 'test',
+      sourceType: 'public_post',
+      isEnabled: () => true,
+      search: async (q) => {
+        searched.push(q.terms)
+        return []
+      },
+    } satisfies SourceAdapter)
+
+    const result = await runPipeline(canvas, { model: dispatchModel(), registry, retrievedAt: AT })
+
+    // gen-a1 searched with the model's short queries, not a shredded statement.
+    expect(searched).toContainEqual(['context', 'loss'])
+    expect(searched).toContainEqual(['agent', 'memory'])
+    // Every uncovered assumption fell back, visibly.
+    const fallbackWarnings = result.warnings.filter((w) => w.startsWith('queries:'))
+    expect(fallbackWarnings).toHaveLength(6)
   })
 
   it('propagates the knowledge cutoff to research', async () => {

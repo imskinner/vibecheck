@@ -106,6 +106,14 @@ async function main(): Promise<void> {
     line(`    ${a.statement}`)
   }
 
+  if (result.redTeam.uncertaintyRaises.length > 0) {
+    line()
+    line('  RED TEAM RAISED UNCERTAINTY')
+    for (const r of result.redTeam.uncertaintyRaises) {
+      line(`  ${r.assumptionId}: ${r.from} → ${r.to} — ${r.reason}`)
+    }
+  }
+
   line()
   line('  SCORE')
   rule()

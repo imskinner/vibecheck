@@ -19,6 +19,13 @@ import {
 import type { AdapterRegistry } from '../research/adapters/registry'
 import type { ModelClient } from '../research/model'
 import { runResearch, type ResearchRun } from '../research/orchestrator'
+import { baselineTerms } from '../research/planner'
+import {
+  MODEL_ID as QUERIES_MODEL_ID,
+  PROMPT_ID as QUERIES_PROMPT_ID,
+  PROMPT_VERSION as QUERIES_PROMPT_VERSION,
+} from '../research/prompts/generate-queries.v1'
+import { generateQueryTerms } from '../research/query-terms'
 import {
   MODEL_ID as EXTRACT_MODEL_ID,
   PROMPT_ID as EXTRACT_PROMPT_ID,
@@ -74,6 +81,11 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
   const redTeam = await runRedTeam(canvas, generation.assumptions, { model: options.model })
   const ledgerAfterRedTeam = applyRedTeam({ assumptions: generation.assumptions, claims: [] }, redTeam)
 
+  // Search queries — model-generated, batched. The lexical baseline restates the assumption and
+  // returns zero hits (proven on the first live run); a run where every query misses reads as
+  // "no evidence exists" when the truth is "nobody searched properly".
+  const queryTerms = await generateQueryTerms(ledgerAfterRedTeam.assumptions, { model: options.model })
+
   // [3] Desk Research — every assumption, canvas and red-team alike, in kill-shot order.
   const research = await runResearch(ledgerAfterRedTeam, {
     registry: options.registry,
@@ -81,7 +93,10 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
     ...(options.maxDocumentsPerAssumption === undefined
       ? {}
       : { maxDocumentsPerAssumption: options.maxDocumentsPerAssumption }),
-    planOptions: options.notAfter === undefined ? {} : { notAfter: options.notAfter },
+    planOptions: {
+      generateTerms: (assumption) => queryTerms.terms.get(assumption.id) ?? baselineTerms(assumption),
+      ...(options.notAfter === undefined ? {} : { notAfter: options.notAfter }),
+    },
   })
 
   // Synthesis — researched-and-empty becomes an explicit honest negative.
@@ -108,16 +123,21 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
     warnings: [
       ...generation.warnings.map((w) => `generation: ${w}`),
       ...redTeam.warnings.map((w) => `red-team: ${w}`),
+      ...queryTerms.fallbacks.map(
+        (f) => `queries: ${f.assumptionId} fell back to the lexical baseline — ${f.reason}`,
+      ),
     ],
     provenance: {
       promptVersions: {
         [GENERATE_PROMPT_ID]: GENERATE_PROMPT_VERSION,
         [RED_TEAM_PROMPT_ID]: RED_TEAM_PROMPT_VERSION,
+        [QUERIES_PROMPT_ID]: QUERIES_PROMPT_VERSION,
         [EXTRACT_PROMPT_ID]: EXTRACT_PROMPT_VERSION,
       },
       modelIds: {
         [GENERATE_PROMPT_ID]: GENERATE_MODEL_ID,
         [RED_TEAM_PROMPT_ID]: RED_TEAM_MODEL_ID,
+        [QUERIES_PROMPT_ID]: QUERIES_MODEL_ID,
         [EXTRACT_PROMPT_ID]: EXTRACT_MODEL_ID,
       },
     },
