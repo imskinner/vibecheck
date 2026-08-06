@@ -4,7 +4,7 @@
   "layer1": {
     "name": "Outbox",
     "one_liner": "Postal mail digitised: they collected your physical mail and scanned it for you.",
-    "description": "Subscribers redirected their postal mail to Outbox, who collected, scanned and delivered it digitally, with the option to have originals kept or shredded. $4.99/month.",
+    "description": "Subscribers redirected their postal mail to the service, which collected, scanned and delivered it digitally, with the option to have originals kept or shredded. $4.99/month.",
     "t0": "2012-06-01",
     "outcome": "died",
     "outcome_date": "2014-01-21",

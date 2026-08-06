@@ -4,7 +4,7 @@
   "layer1": {
     "name": "Binpress",
     "one_liner": "A marketplace where developers sell source code components and plugins.",
-    "description": "Developers listed reusable components with licensing handled by the platform; other developers bought them rather than building from scratch. Binpress took a commission on each sale.",
+    "description": "Developers listed reusable components with licensing handled by the platform; other developers bought them rather than building from scratch. the platform took a commission on each sale.",
     "t0": "2011-01-01",
     "outcome": "died",
     "outcome_date": "2016-02-11",
