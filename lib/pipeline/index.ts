@@ -17,8 +17,14 @@ import {
   PROMPT_VERSION as GENERATE_PROMPT_VERSION,
 } from '../assumptions/prompts/generate-assumptions.v1'
 import type { AdapterRegistry } from '../research/adapters/registry'
+import { mapCompetitors, type LandscapeResult } from '../research/competitors'
 import type { ModelClient } from '../research/model'
 import { runResearch, type ResearchRun } from '../research/orchestrator'
+import {
+  MODEL_ID as COMPETITORS_MODEL_ID,
+  PROMPT_ID as COMPETITORS_PROMPT_ID,
+  PROMPT_VERSION as COMPETITORS_PROMPT_VERSION,
+} from '../research/prompts/map-competitors.v1'
 import { baselineTerms } from '../research/planner'
 import {
   MODEL_ID as QUERIES_MODEL_ID,
@@ -60,6 +66,8 @@ export interface PipelineResult {
   generation: GenerationResult
   redTeam: RedTeamResult
   research: ResearchRun
+  /** Report artifact only. Computed AFTER the score, consumed by nothing in lib/scoring. */
+  competitive: LandscapeResult
   honestNegatives: number
   /** Stage-prefixed aggregation of everything the stages flagged. */
   warnings: string[]
@@ -111,6 +119,11 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
   const score = scoreLedger(ledger)
   const killShots = rankKillShots(ledger.assumptions, KILL_SHOT_COUNT)
 
+  // Competitive landscape — a report artifact. Runs AFTER the score on purpose: nothing it
+  // produces can feed the arithmetic, and this ordering makes that structural rather than
+  // disciplinary. PRD §5.10.
+  const competitive = await mapCompetitors(canvas, ledger, { model: options.model })
+
   return {
     canvas,
     ledger,
@@ -119,6 +132,7 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
     generation,
     redTeam,
     research,
+    competitive,
     honestNegatives: negatives.length,
     warnings: [
       ...generation.warnings.map((w) => `generation: ${w}`),
@@ -126,6 +140,8 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
       ...queryTerms.fallbacks.map(
         (f) => `queries: ${f.assumptionId} fell back to the lexical baseline — ${f.reason}`,
       ),
+      ...(competitive.reason === null ? [] : [`competitive: landscape unusable — ${competitive.reason}`]),
+      ...competitive.warnings.map((w) => `competitive: ${w}`),
     ],
     provenance: {
       promptVersions: {
@@ -133,12 +149,14 @@ export async function runPipeline(canvas: IdeaCanvas, options: PipelineOptions):
         [RED_TEAM_PROMPT_ID]: RED_TEAM_PROMPT_VERSION,
         [QUERIES_PROMPT_ID]: QUERIES_PROMPT_VERSION,
         [EXTRACT_PROMPT_ID]: EXTRACT_PROMPT_VERSION,
+        [COMPETITORS_PROMPT_ID]: COMPETITORS_PROMPT_VERSION,
       },
       modelIds: {
         [GENERATE_PROMPT_ID]: GENERATE_MODEL_ID,
         [RED_TEAM_PROMPT_ID]: RED_TEAM_MODEL_ID,
         [QUERIES_PROMPT_ID]: QUERIES_MODEL_ID,
         [EXTRACT_PROMPT_ID]: EXTRACT_MODEL_ID,
+        [COMPETITORS_PROMPT_ID]: COMPETITORS_MODEL_ID,
       },
     },
   }

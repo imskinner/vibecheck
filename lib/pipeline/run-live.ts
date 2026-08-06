@@ -17,6 +17,7 @@ import { readFileSync } from 'node:fs'
 
 import { extractCanvas } from '../canvas/extract'
 import type { IdeaCanvas } from '../canvas/types'
+import { extractTextFromFile } from '../ingest/extract-text'
 import { createAnthropicModelClient } from '../research/anthropic-client'
 import { AdapterRegistry } from '../research/adapters/registry'
 import { createHackerNewsAdapter } from '../research/adapters/hacker-news'
@@ -44,9 +45,17 @@ async function resolveCanvas(model: ReturnType<typeof createAnthropicModelClient
     return parsed
   }
 
-  const description = arg('description')
+  // --input-file: a pitch memo, PRD, or research doc (.txt .md .pdf .docx .xlsx .csv). The
+  // extracted text goes through canvas extraction and the same §5.1 gate as a typed description.
+  const inputFile = arg('input-file')
+  let description = arg('description')
+  if (inputFile !== undefined) {
+    const extracted = await extractTextFromFile(inputFile)
+    for (const warning of extracted.warnings) line(`  ⚠ ${inputFile}: ${warning}`)
+    description = extracted.text
+  }
   if (description === undefined) {
-    line('  pass --description "..." or --file <canvas.json>')
+    line('  pass --description "...", --input-file <doc>, or --file <canvas.json>')
     return null
   }
 

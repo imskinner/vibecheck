@@ -100,7 +100,10 @@ ugly; without it Vibecheck is another $29 report.
 ## 5. Feature specification
 
 ### 5.1 Idea Canvas
-- Input: a URL (fetch + parse landing page), a freeform description, or a short guided chat.
+- Input: a URL (fetch + parse landing page), a freeform description, a short guided chat, or an
+  **uploaded document [v0.2]** — pitch memo, PRD, research notes, spreadsheet (.txt, .md, .pdf,
+  .docx, .xlsx, .csv). File text is extracted (bounded, truncation reported) and then follows the
+  same path as a typed description: canvas extraction, then the confirmation gate below.
 - Output: structured JSON — `problem`, `icp_hypothesis`, `wedge_hypothesis`, `business_model`,
   `stage`, `founder_unfair_advantage` (optional, user-supplied).
 - Must show the user the parsed canvas and let them correct it before research runs.
@@ -305,7 +308,10 @@ assumption was created. The pack displays it; it does not author it. Anything el
 threshold drift toward whatever the evidence turned out to be.
 
 ### 5.7 Evidence Intake
-- Paste notes, or upload a transcript.
+- Paste notes, or upload a transcript **as a file [v0.2]** (.txt, .md, .pdf, .docx — recorded-call
+  transcripts arrive as all of these). Extracted text goes through the same intake as pasted
+  notes, including the verbatim-quote check: a claim must quote the transcript's actual words, so
+  the anti-fabrication guarantee is identical for typed and uploaded evidence.
 - LLM extracts `Claim`s with `source_type: 'primary_conversation'`, maps them to assumptions,
   and proposes status changes for user approval (never auto-applies).
 - Diff view: "your Market Access score moved 41 → 58 because of 3 new primary claims."
@@ -491,6 +497,35 @@ a pointer to the prior snapshot, and the movement diff — the delta plus the sp
 responsible. This table is what renders "your Market Access score moved 41 → 58 because of 3 new
 primary claims" (§5.7) and what makes invariant 4 in §5.8.6 checkable. Snapshots come from
 evidence intake as well as full runs, so the Report reference is nullable.
+
+### 5.10 Competitive Landscape — **[v0.2] new**
+
+The research produces, alongside the ledger, a map of who already occupies or contests the wedge:
+
+- **A positioning quadrant** on two axes chosen per idea — the pair that makes "is this space
+  actually empty" a checkable question (whose data you sit on, format-vs-detect, self-serve vs
+  sold), never generic "value/quality" axes. The idea itself is placed on the same axes, and the
+  map states where the empty space is — or that there is none.
+- **A competitive matrix**: per competitor, what it is, its category (`direct`, `adjacent`,
+  `incumbent_feature`, `diy_substitute` — the status quo is a competitor), and a threat level
+  with a one-sentence reason. **Threat means ability and motivation to occupy the wedge, never
+  company size.**
+- **Claims linkage, code-owned.** An entry citing research claims that actually exist in the
+  ledger is `basis: 'claims'`; anything else — including entries whose cited ids don't exist,
+  which are stripped and reported — is `basis: 'inference'` and renders visually distinct, per
+  the same §5.3 principle that governs `model_inference` claims. The model cannot label its own
+  recall as research.
+
+**The hard rule: the landscape is a report artifact and never feeds the score.** The Competitive
+Wedge sub-score continues to come exclusively from assumptions and claims; the pipeline computes
+the score *before* this stage runs, so the ordering — not discipline — is what enforces it. A
+model-judged quadrant position that moved a number would be exactly the model-opinion-as-
+arithmetic the deterministic split exists to prevent. What the landscape is allowed to change is
+*what gets tested*: a critical-threat entry is red-team material, and its natural output is an
+assumption ("no incumbent ships X within 12 months") with a criterion.
+
+Landscape entries decay in weeks in AI-era categories; the landscape is stored on the immutable
+Report row precisely so the date it was drawn stays attached to it.
 
 ## 6. Non-goals for v1
 

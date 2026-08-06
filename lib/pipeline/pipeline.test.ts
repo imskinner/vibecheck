@@ -81,6 +81,17 @@ const dispatchModel = () =>
       case 'emit_search_queries':
         // Cover only gen-a1; every other assumption exercises the baseline fallback path.
         return { queries: [{ assumption_id: 'gen-a1', searches: [['context', 'loss'], ['agent', 'memory']] }] }
+      case 'emit_competitive_landscape':
+        return {
+          axes: { x_label: 'Owns the agent surface', y_label: 'Persistence depth' },
+          idea_position: { x: 80, y: 80 },
+          competitors: [
+            { name: 'Anthropic', what: 'Ships the agent itself.', category: 'incumbent_feature', threat: 'critical', threat_reason: 'One changelog entry closes the wedge.', x: 95, y: 40, claim_ids: [] },
+            { name: 'OSS memory servers', what: 'Free MCP memory projects.', category: 'diy_substitute', threat: 'high', threat_reason: 'Zero-cost substitute for the same job.', x: 55, y: 65, claim_ids: [] },
+            { name: 'A CLAUDE.md file', what: 'The hand-rolled status quo.', category: 'diy_substitute', threat: 'medium', threat_reason: 'Good enough for many; costs nothing.', x: 30, y: 30, claim_ids: [] },
+          ],
+          empty_space: 'Automatic decision-level persistence is uncontested today; Anthropic contests it at will.',
+        }
       case 'emit_claims':
         // The access assumption comes back empty — the honest-negative path end to end.
         if (request.userMessage.includes(ACCESS_STATEMENT)) return { claims: [] }
@@ -172,6 +183,7 @@ describe('runPipeline', () => {
       'red-team': 'v1',
       'generate-queries': 'v1',
       'extract-claims': 'v1',
+      'map-competitors': 'v1',
     })
     expect(result.provenance.modelIds['generate-assumptions']).toBe('claude-opus-5')
     expect(result.provenance.modelIds['extract-claims']).toBe('claude-sonnet-5')
@@ -190,6 +202,8 @@ describe('runPipeline', () => {
           return { new_assumptions: [threat(), generated({ statement: 'No incumbent agent harness ships decision persistence within 12 months', category: 'timing' })] }
         case 'emit_search_queries':
           return { queries: [] }
+        case 'emit_competitive_landscape':
+          return { axes: { x_label: 'x', y_label: 'y' } } // unusable on purpose
         case 'emit_claims':
           return { claims: [{ document_index: 0, text: 'A post.', stance: 'supports', confidence: 'medium' }] }
         default:
@@ -201,6 +215,49 @@ describe('runPipeline', () => {
 
     expect(result.warnings).toContainEqual(expect.stringMatching(/^generation: .*access/))
     expect(result.warnings).toContainEqual(expect.stringMatching(/^generation: .*only 3/))
+  })
+
+  it('carries the landscape as a report artifact that CANNOT touch the score', async () => {
+    // The ordering is the guarantee: the score is computed before mapCompetitors runs, so a
+    // landscape emission — however dramatic — reaches nothing in lib/scoring. Removing the
+    // landscape from the result must leave the score bit-identical.
+    const result = await runPipeline(canvas, {
+      model: dispatchModel(),
+      registry: stubRegistry(),
+      retrievedAt: AT,
+    })
+
+    expect(result.competitive.landscape).not.toBeNull()
+    expect(result.competitive.landscape!.competitors).toHaveLength(3)
+    expect(result.competitive.landscape!.competitors[0]!.basis).toBe('inference')
+    // Same scripted inputs minus any landscape influence: score identical to the earlier runs.
+    expect(result.score.composite).toBe(30)
+    expect(result.score.capBinding).toBe(true)
+  })
+
+  it('degrades to a warning when the landscape emission is unusable', async () => {
+    // Uses the warnings-test dispatch, whose landscape emission is deliberately broken.
+    const model = createScriptedModelClient((request: ToolCallRequest) => {
+      switch (request.tool.name) {
+        case 'emit_assumptions':
+          return { assumptions: canvasLedger() }
+        case 'emit_red_team_findings':
+          return { new_assumptions: [threat(), generated({ statement: 'No incumbent agent harness ships decision persistence within 12 months', category: 'timing' })] }
+        case 'emit_search_queries':
+          return { queries: [] }
+        case 'emit_competitive_landscape':
+          return { nonsense: true }
+        case 'emit_claims':
+          return { claims: [] }
+        default:
+          throw new Error('unexpected')
+      }
+    })
+    const result = await runPipeline(canvas, { model, registry: stubRegistry(), retrievedAt: AT })
+
+    expect(result.competitive.landscape).toBeNull()
+    expect(result.warnings).toContainEqual(expect.stringMatching(/^competitive: landscape unusable/))
+    expect(result.score.composite).toBe(30)
   })
 
   it('is deterministic: the same inputs produce the identical result', async () => {

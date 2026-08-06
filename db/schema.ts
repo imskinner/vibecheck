@@ -32,7 +32,7 @@ import {
   CLAIM_STANCES,
 } from '../lib/scoring/types'
 
-const INPUT_TYPES = ['url', 'description', 'chat'] as const
+const INPUT_TYPES = ['url', 'description', 'chat', 'file'] as const
 const REPORT_STATUSES = ['running', 'completed', 'failed'] as const
 
 /**
@@ -72,6 +72,11 @@ export const reports = pgTable(
     promptVersions: jsonb('prompt_versions').notNull(),
     /** { stage: modelId } — pinned, never "latest". */
     modelIds: jsonb('model_ids').notNull(),
+    /**
+     * CompetitiveLandscape (PRD §5.10) — a report artifact, never a score input. Stored on the
+     * immutable run because landscape claims decay in weeks; the date it was drawn is part of it.
+     */
+    landscape: jsonb('landscape'),
     status: text('status', { enum: REPORT_STATUSES }).notNull(),
     startedAt: timestamp('started_at', { withTimezone: true }).notNull(),
     completedAt: timestamp('completed_at', { withTimezone: true }),

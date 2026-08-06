@@ -134,9 +134,17 @@ Consequences that are easy to violate by accident:
   code already holds — never read from model output. The model cites a document *index*. It cannot
   fabricate a citation; there is no field that accepts one. Kill criterion 3 is why that had to be
   structural rather than instructional. Do not add a URL field to that tool schema.
-- **Every LLM stage goes through `ModelClient`** (`lib/research/model.ts`). No provider SDK is
-  imported anywhere. This keeps model IDs pinned per stage, keeps stages testable with no API key,
-  and gives caching and cost accounting one home.
+- **Every LLM stage goes through `ModelClient`** (`lib/research/model.ts`). Only
+  `anthropic-client.ts` imports the provider SDK. This keeps model IDs pinned per stage, keeps
+  stages testable with no API key, and gives caching and cost accounting one home.
+- **The competitive landscape never feeds the score** (PRD §5.10). The pipeline computes the
+  score *before* `mapCompetitors` runs — the ordering is the enforcement. Entry `basis`
+  ('claims' vs 'inference') is code-computed from whether cited claim ids exist in the ledger;
+  the model cannot label its own recall as research. Threat = ability × motivation to occupy the
+  wedge, never company size.
+- **File ingestion is text extraction only** (`lib/ingest/extract-text.ts` — .txt .md .pdf .docx
+  .xlsx .csv). Every downstream guarantee survives: idea files still hit the §5.1 canvas gate;
+  transcript files still hit the verbatim-quote check. Truncation is always reported.
 - **Adapters enforce the knowledge cutoff twice** — at the API and on the results. An adapter that
   leaks post-`t0` documents silently invalidates every blind-scoring number in §7.
 - **Assumption status is arithmetic, not judgment.** `falsification_criterion` is a structured
@@ -196,7 +204,8 @@ loud rather than shipping anyway.
 | `npm run eval:fabrication -- --dir <run dir>` | Samples desk claims from run artifacts and judges each against its stored snapshot. Kill criterion 3's number. **Spends money.** |
 | `npm run prompt:assumptions` | Renders the assumption-generation prompt against a hardcoded idea. Makes no API call. |
 | `npm run assumptions:live` | Runs assumption generation against the real API for one hardcoded idea. **Spends money.** Needs `ANTHROPIC_API_KEY` or an `ant auth login` profile. |
-| `npm run pipeline:live -- --description "..."` | The whole loop against the real API: canvas → assumptions → red team → research → score. Extracted canvases stop at the §5.1 gate until re-run with `--yes`. **Spends money.** |
+| `npm run pipeline:live -- --description "..."` | The whole loop against the real API: canvas → assumptions → red team → research → score → landscape. `--input-file <doc>` accepts .txt/.md/.pdf/.docx/.xlsx. Extracted canvases stop at the §5.1 gate until re-run with `--yes`. **Spends money.** |
+| `npm run evidence:live -- --artifact <run.json> --transcript-file <file>` | Evidence intake against a run artifact's ledger: proposals with verified quotes, plus the before/after score preview. **Spends money.** |
 | `npm run db:generate` | Generates migration SQL from the schema. Needs no database. |
 | `npm run migrate` | Applies migrations. Needs `DATABASE_URL` — nothing in M0 does. |
 

@@ -13,6 +13,7 @@
     "prompt:assumptions": "tsx lib/assumptions/prompts/preview.ts",
     "assumptions:live": "tsx lib/assumptions/run-live.ts",
     "pipeline:live": "tsx lib/pipeline/run-live.ts",
+    "evidence:live": "tsx lib/evidence/run-live.ts",
     "db:generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate"
   },
@@ -25,6 +26,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
-    "drizzle-orm": "^0.38.2"
+    "drizzle-orm": "^0.38.2",
+    "exceljs": "^4.4.0",
+    "mammoth": "^1.12.0",
+    "pdf-parse": "^2.4.5"
   }
 }
