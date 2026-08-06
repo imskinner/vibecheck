@@ -9,6 +9,7 @@
  * anyway — two layers, because this is the single easiest way to quietly invalidate M5.
  */
 
+import { SUB_SCORE_KEYS, type SubScoreKey } from '../../lib/scoring/types'
 import type { ContaminationRisk, GoldenIdea, Outcome } from '../golden-set/format'
 import { separation, type SeparationReport } from './stats'
 
@@ -19,6 +20,22 @@ export interface BlindArtifactSummary {
   contamination_risk: ContaminationRisk
   variant: number
   composite: number
+  /**
+   * The uncapped desk signal. In a blind desk run EQ is 0 by construction — no primary
+   * conversation can exist — so every composite is min(weightedMean, 30) and composite
+   * separation is degenerate. The Evidence Quality cap is a product feature; for measuring
+   * whether desk research discriminates, the weighted mean is the instrument. PRD §7 asks for
+   * exactly this ("per-sub-score discrimination").
+   */
+  weightedMean: number
+  subScores: Record<SubScoreKey, number>
+}
+
+export interface SubScoreDiscrimination {
+  meanDied: number
+  meanSucceeded: number
+  /** Positive = the sub-score rates survivors higher, as it should. */
+  difference: number
 }
 
 export interface EntryStability {
@@ -30,10 +47,17 @@ export interface EntryStability {
 
 export interface BlindSummary {
   entries: number
-  /** Separation over variant-0 composites, whole set. */
+  /** Separation over variant-0 composites, whole set. Degenerate in desk-only runs — kept
+   * because runs that include evidence intake (M4+) will differ, and the degeneracy should be
+   * visible rather than papered over. */
   separationAll: SeparationReport
   /** The real number: high-contamination entries excluded. PRD golden-set README. */
   separationBlind: SeparationReport
+  /** Separation on the weighted mean — the operative number for blind desk runs. */
+  separationDesk: SeparationReport
+  separationDeskBlind: SeparationReport
+  /** Per-sub-score died-vs-succeeded means, low+medium contamination only. */
+  perSubScore: Record<SubScoreKey, SubScoreDiscrimination> | null
   stability: EntryStability[]
   /** Worst per-entry sigma, against the σ<6 target. Null until any entry has 3+ variants. */
   maxSigma: number | null
@@ -73,23 +97,41 @@ export function summarise(artifacts: BlindArtifactSummary[]): BlindSummary {
     .map((variants) => variants.find((v) => v.variant === 0))
     .filter((v): v is BlindArtifactSummary => v !== undefined)
 
-  const scored = originals.map((o) => ({ id: o.entry_id, outcome: o.outcome, composite: o.composite }))
-  const blindScored = originals
-    .filter((o) => o.contamination_risk !== 'high')
-    .map((o) => ({ id: o.entry_id, outcome: o.outcome, composite: o.composite }))
+  const uncontaminated = originals.filter((o) => o.contamination_risk !== 'high')
+  const on = (rows: BlindArtifactSummary[], value: (o: BlindArtifactSummary) => number) =>
+    separation(rows.map((o) => ({ id: o.entry_id, outcome: o.outcome, composite: value(o) })))
 
+  let perSubScore: BlindSummary['perSubScore'] = null
+  const died = uncontaminated.filter((o) => o.outcome === 'died')
+  const succeeded = uncontaminated.filter((o) => o.outcome === 'succeeded')
+  if (died.length > 0 && succeeded.length > 0) {
+    perSubScore = {} as NonNullable<BlindSummary['perSubScore']>
+    for (const key of SUB_SCORE_KEYS) {
+      const mean = (rows: BlindArtifactSummary[]) =>
+        rows.reduce((a, o) => a + o.subScores[key], 0) / rows.length
+      const meanDied = mean(died)
+      const meanSucceeded = mean(succeeded)
+      perSubScore[key] = { meanDied, meanSucceeded, difference: meanSucceeded - meanDied }
+    }
+  }
+
+  // Stability is measured on the weighted mean for the same reason separation is: with every
+  // variant capped at 30, composite sigma would read 0 and certify a stability nobody tested.
   const stability: EntryStability[] = [...byEntry.entries()].map(([entry_id, variants]) => ({
     entry_id,
     variants: variants.length,
-    sigma: sampleSigma(variants.map((v) => v.composite)),
+    sigma: sampleSigma(variants.map((v) => v.weightedMean)),
   }))
 
   const sigmas = stability.map((s) => s.sigma).filter((s): s is number => s !== null)
 
   return {
     entries: byEntry.size,
-    separationAll: separation(scored),
-    separationBlind: separation(blindScored),
+    separationAll: on(originals, (o) => o.composite),
+    separationBlind: on(uncontaminated, (o) => o.composite),
+    separationDesk: on(originals, (o) => o.weightedMean),
+    separationDeskBlind: on(uncontaminated, (o) => o.weightedMean),
+    perSubScore,
     stability,
     maxSigma: sigmas.length === 0 ? null : Math.max(...sigmas),
   }

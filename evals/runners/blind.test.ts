@@ -10,6 +10,8 @@ const artifact = (over: Partial<BlindArtifactSummary> = {}): BlindArtifactSummar
   contamination_risk: 'low',
   variant: 0,
   composite: 30,
+  weightedMean: 45,
+  subScores: { severity: 50, access: 40, wedge: 50, fit: 45 },
   ...over,
 })
 
@@ -97,13 +99,49 @@ describe('summarise', () => {
     expect(summary.separationAll.status).toBe('insufficient_n')
   })
 
-  it('computes per-entry sigma only at 3+ variants', () => {
+  it('measures separation on the DESK signal, where blind runs actually vary', () => {
+    // Every blind desk run has EQ 0, so every composite is min(weightedMean, 30) — identical.
+    // A summary that measured only composites would report zero separation forever and read as
+    // the kill signal when nothing was measured at all.
+    const died = Array.from({ length: 10 }, (_, i) =>
+      artifact({ entry_id: `d${i}`, outcome: 'died', composite: 30, weightedMean: 40 + i }),
+    )
+    const succeeded = Array.from({ length: 10 }, (_, i) =>
+      artifact({ entry_id: `s${i}`, outcome: 'succeeded', composite: 30, weightedMean: 55 + i }),
+    )
+
+    const summary = summarise([...died, ...succeeded])
+
+    expect(summary.separationDesk.status).toBe('ok')
+    if (summary.separationDesk.status !== 'ok') return
+    expect(summary.separationDesk.meanDifference).toBeCloseTo(15)
+    // And the composite number shows its degeneracy honestly rather than hiding it.
+    expect(summary.separationBlind.status).toBe('ok')
+    if (summary.separationBlind.status !== 'ok') return
+    expect(summary.separationBlind.meanDifference).toBe(0)
+  })
+
+  it('reports per-sub-score discrimination over the uncontaminated subset', () => {
     const summary = summarise([
-      artifact({ entry_id: 'stable', variant: 0, composite: 30 }),
-      artifact({ entry_id: 'stable', variant: 1, composite: 32 }),
-      artifact({ entry_id: 'stable', variant: 2, composite: 34 }),
-      artifact({ entry_id: 'thin', variant: 0, composite: 50 }),
-      artifact({ entry_id: 'thin', variant: 1, composite: 90 }),
+      artifact({ entry_id: 'd1', outcome: 'died', subScores: { severity: 50, access: 30, wedge: 50, fit: 50 } }),
+      artifact({ entry_id: 'd2', outcome: 'died', subScores: { severity: 50, access: 40, wedge: 50, fit: 50 }, contamination_risk: 'high' }),
+      artifact({ entry_id: 's1', outcome: 'succeeded', subScores: { severity: 50, access: 60, wedge: 50, fit: 50 } }),
+    ])
+
+    // d2 is high-contamination and excluded: access meanDied is 30, not 35.
+    expect(summary.perSubScore!.access).toEqual({ meanDied: 30, meanSucceeded: 60, difference: 30 })
+    expect(summary.perSubScore!.severity.difference).toBe(0)
+  })
+
+  it('computes per-entry sigma on the desk signal, only at 3+ variants', () => {
+    // Composite sigma in a desk-only run is trivially 0 — every variant is capped at 30 — and
+    // would certify a stability nobody tested.
+    const summary = summarise([
+      artifact({ entry_id: 'stable', variant: 0, composite: 30, weightedMean: 30 }),
+      artifact({ entry_id: 'stable', variant: 1, composite: 30, weightedMean: 32 }),
+      artifact({ entry_id: 'stable', variant: 2, composite: 30, weightedMean: 34 }),
+      artifact({ entry_id: 'thin', variant: 0, weightedMean: 50 }),
+      artifact({ entry_id: 'thin', variant: 1, weightedMean: 90 }),
     ])
 
     const stable = summary.stability.find((s) => s.entry_id === 'stable')!

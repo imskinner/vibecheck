@@ -568,6 +568,17 @@ The stability check is inert at M0 — paraphrasing an idea does not perturb a h
 ledger, so there is nothing to measure until assumption generation is live at M1. The runner
 reports `not_applicable` rather than a misleading zero.
 
+**[v0.2, from the first blind pilot] Blind desk runs measure separation on the weighted mean, not
+the composite.** A blind run cannot contain a primary conversation, so Evidence Quality is 0 by
+construction and every composite is `min(weighted_mean, 30)` — composite separation and composite
+σ are both degenerate (a summary measuring them would report zero separation and perfect
+stability forever, with the first reading as the kill signal and the second as a certification,
+neither measured). The Evidence Quality cap is a product feature, not an eval instrument; §7's
+"per-sub-score discrimination" is the operative metric, alongside separation on the uncapped
+weighted mean. The σ < 6 stability target likewise applies to the weighted mean in desk-only
+runs. Composite separation becomes meaningful again once runs include evidence intake (M4+), and
+the runner keeps reporting it, labelled degenerate, so the distinction stays visible.
+
 ## 8. Technical direction — **[v0.2] revised**
 
 - **Frontend:** Next.js (App Router) + TypeScript + Tailwind + shadcn/ui

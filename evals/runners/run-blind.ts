@@ -52,14 +52,18 @@ function printSummary(artifacts: BlindArtifactSummary[]): void {
   line('  ' + '─'.repeat(96))
   for (const a of artifacts.filter((x) => x.variant === 0)) {
     line(
-      `  ${a.entry_id.padEnd(28)} ${a.outcome.padEnd(11)} ${a.contamination_risk.padEnd(8)} composite ${a.composite.toFixed(1).padStart(6)}`,
+      `  ${a.entry_id.padEnd(28)} ${a.outcome.padEnd(11)} ${a.contamination_risk.padEnd(8)}` +
+        ` desk ${a.weightedMean.toFixed(1).padStart(6)} · composite ${a.composite.toFixed(1).padStart(6)}`,
     )
   }
   line('  ' + '─'.repeat(96))
 
+  // The desk numbers are the operative ones for blind runs: EQ is 0 by construction, so every
+  // composite is min(weightedMean, 30) and composite separation is degenerate.
   for (const [label, sep] of [
-    ['separation (all)', summary.separationAll],
-    ['separation (blind: low+medium contamination)', summary.separationBlind],
+    ['desk separation (all)', summary.separationDesk],
+    ['desk separation (blind: low+medium)', summary.separationDeskBlind],
+    ['composite separation (degenerate in desk-only runs)', summary.separationBlind],
   ] as const) {
     if (sep.status === 'ok') {
       line(
@@ -71,18 +75,48 @@ function printSummary(artifacts: BlindArtifactSummary[]): void {
     }
   }
 
+  if (summary.perSubScore !== null) {
+    for (const [key, d] of Object.entries(summary.perSubScore)) {
+      line(
+        `  sub-score ${key.padEnd(10)} died ${d.meanDied.toFixed(1).padStart(6)} vs succeeded ${d.meanSucceeded.toFixed(1).padStart(6)} · diff ${d.difference >= 0 ? '+' : ''}${d.difference.toFixed(1)}`,
+      )
+    }
+  }
+
   if (summary.maxSigma !== null) {
-    line(`  stability: worst per-entry σ ${summary.maxSigma.toFixed(1)} (target < 6)`)
+    line(`  stability: worst per-entry desk σ ${summary.maxSigma.toFixed(1)} (target < 6)`)
   } else {
     line('  stability: not measured (needs --variants 3+)')
   }
   line()
 }
 
+interface StoredArtifact extends BlindArtifactSummary {
+  score: { weightedMean: number; subScores: Record<string, { value: number }> }
+}
+
+/** Maps a full stored artifact down to what summarise() needs. */
+function toSummary(a: StoredArtifact): BlindArtifactSummary {
+  return {
+    entry_id: a.entry_id,
+    outcome: a.outcome,
+    contamination_risk: a.contamination_risk,
+    variant: a.variant,
+    composite: a.composite,
+    weightedMean: a.score.weightedMean,
+    subScores: {
+      severity: a.score.subScores['severity']!.value,
+      access: a.score.subScores['access']!.value,
+      wedge: a.score.subScores['wedge']!.value,
+      fit: a.score.subScores['fit']!.value,
+    },
+  }
+}
+
 function loadArtifacts(dir: string): BlindArtifactSummary[] {
   return readdirSync(dir)
     .filter((f) => f.endsWith('.json') && f !== 'summary.json')
-    .map((f) => JSON.parse(readFileSync(join(dir, f), 'utf8')) as BlindArtifactSummary)
+    .map((f) => toSummary(JSON.parse(readFileSync(join(dir, f), 'utf8')) as StoredArtifact))
 }
 
 async function main(): Promise<void> {
@@ -135,7 +169,7 @@ async function main(): Promise<void> {
       const file = join(outDir, artifactFile(entry.id, variant))
       if (existsSync(file)) {
         line(`  ${entry.id} v${variant}: exists, skipped`)
-        artifacts.push(JSON.parse(readFileSync(file, 'utf8')) as BlindArtifactSummary)
+        artifacts.push(toSummary(JSON.parse(readFileSync(file, 'utf8')) as StoredArtifact))
         continue
       }
 
@@ -194,7 +228,7 @@ async function main(): Promise<void> {
       }
 
       writeFileSync(file, JSON.stringify(artifact, null, 2) + '\n', 'utf8')
-      artifacts.push(artifact)
+      artifacts.push(toSummary(artifact as unknown as StoredArtifact))
       line(
         `  ${entry.id} v${variant}: composite ${result.score.composite.toFixed(1)}` +
           ` · EQ ${result.score.evidenceQuality.toFixed(0)} · ${result.ledger.claims.length} claims` +
