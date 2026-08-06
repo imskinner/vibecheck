@@ -79,12 +79,26 @@ export async function mapCompetitors(
   const rejected: { reason: string; raw: unknown }[] = []
   const warnings: string[] = []
 
-  const raw = await options.model.callTool({
-    modelId: options.modelId ?? MODEL_ID,
-    system: SYSTEM_PROMPT,
-    userMessage: renderUserMessage(canvas, ledger),
-    tool: EMIT_LANDSCAPE_TOOL,
-  })
+  let raw: unknown
+  try {
+    raw = await options.model.callTool({
+      modelId: options.modelId ?? MODEL_ID,
+      system: SYSTEM_PROMPT,
+      userMessage: renderUserMessage(canvas, ledger),
+      tool: EMIT_LANDSCAPE_TOOL,
+      // The whole research record goes in and a 12-entry landscape comes out, with thinking
+      // sharing the same budget. 16k truncated on the first live run; this stage gets headroom.
+      maxTokens: 32_000,
+    })
+  } catch (error) {
+    // The landscape is a report artifact — a failed call degrades the report, never the run.
+    return {
+      landscape: null,
+      reason: `model call failed — ${error instanceof Error ? error.message : String(error)}`,
+      rejected,
+      warnings,
+    }
+  }
 
   if (!isObject(raw)) {
     return { landscape: null, reason: 'output was not an object', rejected, warnings }

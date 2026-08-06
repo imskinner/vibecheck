@@ -5,6 +5,7 @@ import {
   createAnthropicModelClient,
   ModelRefusalError,
   NoToolCallError,
+  TruncatedToolCallError,
 } from './anthropic-client'
 import type { ToolCallRequest } from './model'
 
@@ -104,6 +105,20 @@ describe('createAnthropicModelClient', () => {
 
     await expect(createAnthropicModelClient({ client: sdk }).callTool(request)).rejects.toThrow(
       NoToolCallError,
+    )
+  })
+
+  it('raises on a tool call that hit max_tokens, even when a tool block is present', async () => {
+    // Proven live: a truncated tool call arrives with empty or partial input that parses as
+    // "fields missing" downstream. It must fail loudly, not pass as the model's answer.
+    const { sdk } = stubSdk({
+      stop_reason: 'max_tokens',
+      content: [{ type: 'tool_use', name: 'emit_claims', id: 'toolu_1', input: {} }],
+      usage,
+    })
+
+    await expect(createAnthropicModelClient({ client: sdk }).callTool(request)).rejects.toThrow(
+      TruncatedToolCallError,
     )
   })
 

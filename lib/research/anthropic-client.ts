@@ -77,6 +77,18 @@ export class NoToolCallError extends Error {
   }
 }
 
+export class TruncatedToolCallError extends Error {
+  constructor(
+    readonly modelId: string,
+    readonly toolName: string,
+  ) {
+    super(
+      `model ${modelId} hit max_tokens while emitting '${toolName}' — the tool input is truncated and cannot be trusted. Raise maxTokens for this stage.`,
+    )
+    this.name = 'TruncatedToolCallError'
+  }
+}
+
 export function createAnthropicModelClient(
   options: AnthropicModelClientOptions = {},
 ): AnthropicModelClient {
@@ -139,9 +151,16 @@ export function createAnthropicModelClient(
       )
 
       if (!toolUse) {
-        // Includes the max_tokens case, where the tool input was truncated mid-JSON. Failing
-        // loudly beats handing a half-parsed object to a stage that will treat it as complete.
         throw new NoToolCallError(request.modelId, request.tool.name, message.stop_reason)
+      }
+
+      // A tool call that hit max_tokens is a half-written object the API surfaces as empty or
+      // partial input — the first live landscape run proved it arrives looking complete and
+      // parses as "fields missing". Thinking is on by default and shares the max_tokens budget
+      // with the output, so big-input stages hit this before anything else does. Fail loudly;
+      // never hand a truncated emission to a stage that will treat it as the model's answer.
+      if (message.stop_reason === 'max_tokens') {
+        throw new TruncatedToolCallError(request.modelId, request.tool.name)
       }
 
       return toolUse.input

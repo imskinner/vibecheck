@@ -94,6 +94,25 @@ describe('mapCompetitors', () => {
     expect(result.landscape!.competitors).toHaveLength(3)
   })
 
+  it('degrades to a reason when the model call itself fails', async () => {
+    // A truncated or failed call must degrade the report, never the run.
+    const model = {
+      callTool: async () => {
+        throw new Error("model hit max_tokens while emitting 'emit_competitive_landscape'")
+      },
+    }
+    const result = await mapCompetitors(canvas, ledger(), { model })
+
+    expect(result.landscape).toBeNull()
+    expect(result.reason).toMatch(/model call failed — .*max_tokens/)
+  })
+
+  it('asks for headroom: the landscape call raises maxTokens', async () => {
+    const model = createScriptedModelClient([emission()])
+    await mapCompetitors(canvas, ledger(), { model })
+    expect(model.calls[0]!.request.maxTokens).toBe(32_000)
+  })
+
   it('returns a reason, not a throw, when the emission is unusable', async () => {
     const model = createScriptedModelClient([{ axes: { x_label: 'x', y_label: 'y' } }])
     const result = await mapCompetitors(canvas, ledger(), { model })
