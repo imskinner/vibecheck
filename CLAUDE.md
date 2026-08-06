@@ -194,6 +194,7 @@ loud rather than shipping anyway.
 | `npm run eval` | Headless golden-set run. `-- --json` for machine-readable output. |
 | `npm run prompt:assumptions` | Renders the assumption-generation prompt against a hardcoded idea. Makes no API call. |
 | `npm run assumptions:live` | Runs assumption generation against the real API for one hardcoded idea. **Spends money.** Needs `ANTHROPIC_API_KEY` or an `ant auth login` profile. |
+| `npm run pipeline:live -- --description "..."` | The whole loop against the real API: canvas → assumptions → red team → research → score. Extracted canvases stop at the §5.1 gate until re-run with `--yes`. **Spends money.** |
 | `npm run db:generate` | Generates migration SQL from the schema. Needs no database. |
 | `npm run migrate` | Applies migrations. Needs `DATABASE_URL` — nothing in M0 does. |
 

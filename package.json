@@ -10,6 +10,7 @@
     "eval": "tsx evals/runners/run-golden-set.ts",
     "prompt:assumptions": "tsx lib/assumptions/prompts/preview.ts",
     "assumptions:live": "tsx lib/assumptions/run-live.ts",
+    "pipeline:live": "tsx lib/pipeline/run-live.ts",
     "db:generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate"
   },
