@@ -109,14 +109,14 @@ const SUB_SCORE_COLUMNS: [SubScoreKey, string][] = [
 function printHuman(report: EvalReport, rows: Row[]): void {
   const line = (s = '') => process.stdout.write(s + '\n')
   const num = (x: number, w = 6) => x.toFixed(1).padStart(w)
-  const rule = '  ' + '─'.repeat(90)
+  const rule = '  ' + '─'.repeat(96)
 
   line()
   line('  VIBECHECK GOLDEN SET')
   line(rule)
   line(
     '  ' +
-      'entry'.padEnd(26) +
+      'entry'.padEnd(32) +
       'outcome'.padEnd(11) +
       'basis'.padEnd(15) +
       SUB_SCORE_COLUMNS.map(([, label]) => label.padStart(6)).join('') +
@@ -129,7 +129,7 @@ function printHuman(report: EvalReport, rows: Row[]): void {
     const s = r.score
     line(
       '  ' +
-        r.id.padEnd(26) +
+        r.id.padEnd(32) +
         r.outcome.padEnd(11) +
         r.basis.padEnd(15) +
         SUB_SCORE_COLUMNS.map(([key]) => num(s.subScores[key].value)).join('') +

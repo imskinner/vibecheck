@@ -3,8 +3,11 @@
 30 real ideas with known outcomes at a chosen point in time — 15 that died, 15 that reached
 meaningful revenue. Sourced from public postmortems, Indie Hackers, and shutdown posts.
 
-**Status: 3 of 30.** All three are synthetic fixtures. The 27 real entries are still to be
-contributed — see [Contributing an entry](#contributing-an-entry).
+**Status: 12 synthetic fixtures, 0 real entries.** The fixtures clear the M0 gate — 12 entries
+score headless — and pin the scoring function's behaviour as a regression suite. They are excluded
+from separation statistics and **cannot substitute for the 30 real entries M5 needs**: an
+instrument calibrated on invented outcomes measures nothing about the world. See
+[Contributing an entry](#contributing-an-entry).
 
 If the golden set shows no separation, that is the kill signal for Vibecheck itself (PRD §10).
 Say so out loud rather than shipping anyway.
@@ -88,16 +91,29 @@ would be exactly the fabrication this product exists to prevent.
 Every synthetic `source_url` must use the `example://` scheme, enforced by the validator, so a
 fixture citation can never be mistaken for a real one. Real entries may not use it.
 
-The three seeds are chosen adversarially rather than representatively:
+Each fixture earns its place by pinning a distinct behaviour — they are a behaviour matrix, not a
+sample. Adding a fixture that pins nothing new is noise; if you cannot write its `pins` field, it
+does not belong here.
 
 | Fixture | Pins |
 |---|---|
 | `synth-001-postpilot` | The cap binding. Thorough desk research, zero conversations, EQ 0 → held at 30 |
 | `synth-002-ledgerlift` | The cap releasing. Primary coverage of load-bearing assumptions → composite set by evidence |
-| `synth-003-clinicqueue` | The Market Access trap. Severity 90 on real primary evidence, access refuted, composite still ~48 |
+| `synth-003-clinicqueue` | **The Market Access trap.** Severity 90 on real primary evidence, access refuted, composite still ~48 |
+| `synth-004-sketchsync` | Uncovered dimensions. Three sub-scores with no assumptions → 50 with `uncovered: true` |
+| `synth-005-inference-flood` | The model_inference swing clamp, end to end. 12 inference claims move support by exactly 8 |
+| `synth-006-red-team-heavy` | A thorough red team tightens the cap without cratering an evidenced sub-score |
+| `synth-007-conflicting-primary` | Conflicting primary evidence is not a verdict — `mixed` stays unresolved, band stays wide |
+| `synth-008-gaming-attempt` | **The gaming vector.** 15 conversations on an impact-1 assumption → EQ stays at 17 |
+| `synth-009-partial-coverage` | Fractional coverage. The middle of the cap's range, which nothing else occupies |
+| `synth-010-weak-below-cap` | The cap is a ceiling, not a floor. Weighted mean 10 → composite 10, not lifted to 30 |
+| `synth-011-criterion-override` | Pre-registered arithmetic beats accumulated desk evidence |
+| `synth-012-full-coverage` | The top of the range. EQ 100 → cap 100 → cap stops constraining anything |
 
-The third is the one that matters most: Market Access is the dimension the PRD says competitors
-ignore, so it is the one whose behaviour most needs pinning before anything is built on top of it.
+Two matter most. `synth-003` pins Market Access — the dimension the PRD says competitors ignore, so
+the one whose behaviour most needs pinning before anything is built on it. `synth-008` pins the
+gaming vector: if a future change makes Evidence Quality a claim count or a plain ratio, that
+entry's score jumps and the cap becomes purchasable with busywork.
 
 ---
 

@@ -1,0 +1,68 @@
+{
+  "id": "synth-009-partial-coverage",
+  "schema_version": 1,
+  "layer1": {
+    "name": "KilnBook",
+    "one_liner": "Firing schedule booking for shared ceramics studios.",
+    "description": "Kiln booking and firing-schedule management for shared studios. Halfway through discovery: every load-bearing assumption has real conversations behind it, none has enough to resolve.",
+    "t0": "2021-01-01",
+    "outcome": "succeeded",
+    "outcome_date": "2023-06-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The middle of the cap's range, which no other fixture occupies. Both assumptions sit at half their pre-registered sample size, so coverage is fractional, Evidence Quality lands near 50 and the cap near 65 — binding, but well above the floor. Also pins that partial coverage does not resolve a criterion: both assumptions stay untested and the confidence bands stay wide even though real conversations have happened.",
+    "assumptions": [
+      {
+        "id": "kb-a1",
+        "statement": "At least 4 in 10 shared ceramics studios with 30 or more members have lost a firing slot to a double booking in the past year",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "shared ceramics studios with 30 or more members",
+          "observation": "ask the studio manager about their last kiln scheduling conflict",
+          "metric": "count who lost a slot to a double booking",
+          "comparator": "<",
+          "threshold": 4,
+          "sample_size": 6
+        }
+      },
+      {
+        "id": "kb-a2",
+        "statement": "At least 3 in 10 shared ceramics studios contacted through regional craft guild lists reply within two weeks",
+        "category": "access",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "shared ceramics studios listed with regional craft guilds",
+          "observation": "contact listed studios and count replies within two weeks",
+          "metric": "count replying within two weeks",
+          "comparator": "<",
+          "threshold": 3,
+          "sample_size": 6
+        }
+      }
+    ],
+    "claims": [
+      { "id": "kb-c1", "assumption_id": "kb-a1", "text": "A studio manager describes two members claiming the same firing slot last month.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2020-11-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "kb-c2", "assumption_id": "kb-a1", "text": "A second manager keeps a paper sheet specifically to prevent double bookings.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2020-11-12", "retrieved_text": null, "confidence": "high" },
+      { "id": "kb-c3", "assumption_id": "kb-a1", "text": "A third studio has not had a conflict since capping member count.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2020-11-15", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "kb-c4", "assumption_id": "kb-a2", "text": "A guild-listed studio replied within three days.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2020-11-18", "retrieved_text": null, "confidence": "high" },
+      { "id": "kb-c5", "assumption_id": "kb-a2", "text": "A second guild-listed studio replied within a week and booked a call.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2020-11-20", "retrieved_text": null, "confidence": "high" },
+      { "id": "kb-c6", "assumption_id": "kb-a2", "text": "A third listed studio did not reply within two weeks.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2020-11-25", "retrieved_text": null, "confidence": "medium" },
+      { "id": "kb-c7", "assumption_id": "kb-a2", "text": "A regional craft guild publishes a filterable member studio directory.", "stance": "supports", "source_url": "example://craft-guild/directory", "source_type": "company_page", "retrieved_at": "2020-11-05", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" }
+    ]
+  }
+}

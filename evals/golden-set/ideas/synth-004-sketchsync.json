@@ -1,0 +1,63 @@
+{
+  "id": "synth-004-sketchsync",
+  "schema_version": 1,
+  "layer1": {
+    "name": "SketchSync",
+    "one_liner": "File versioning for freelance illustrators.",
+    "description": "Automatic version history for illustration files, with visual diffing between revisions. A well-researched problem with nothing yet known about reach, competition, or the founder's fit.",
+    "t0": "2020-05-01",
+    "outcome": "died",
+    "outcome_date": "2021-08-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "Uncovered dimensions. Every assumption maps to Problem Severity, so Market Access, Competitive Wedge and Founder Fit have no assumptions at all. They must report 50 with uncovered=true and a full-width band — a placeholder that the report can name as a gap, not an average nobody computed. The failure mode this guards against is a ledger that ignores three of four dimensions still producing a confident-looking composite.",
+    "assumptions": [
+      {
+        "id": "ss-a1",
+        "statement": "At least 6 in 10 freelance illustrators billing over $50/hr have lost more than 2 hours of work to an overwritten file in the past year",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "freelance illustrators billing over $50/hr",
+          "observation": "ask them to recall the last time they lost work to a file mistake",
+          "metric": "count who lost 2+ hours in the past year",
+          "comparator": "<",
+          "threshold": 6,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "ss-a2",
+        "statement": "At least 3 in 10 illustration studios with 5 or more staff already pay for a file versioning tool",
+        "category": "icp",
+        "origin": "canvas",
+        "impact": 3,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "illustration studios with 5 or more staff",
+          "observation": "ask the studio lead to list their current file tooling and cost",
+          "metric": "count already paying for versioning",
+          "comparator": "<",
+          "threshold": 3,
+          "sample_size": 10
+        }
+      }
+    ],
+    "claims": [
+      { "id": "ss-c1", "assumption_id": "ss-a1", "text": "An illustrator describes losing a full afternoon to a saved-over layer file.", "stance": "supports", "source_url": "example://forum/illustration/1", "source_type": "public_post", "retrieved_at": "2020-04-10", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" },
+      { "id": "ss-c2", "assumption_id": "ss-a1", "text": "A second illustrator reports the same failure twice in one project.", "stance": "supports", "source_url": "example://forum/illustration/2", "source_type": "public_post", "retrieved_at": "2020-04-12", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" },
+      { "id": "ss-c3", "assumption_id": "ss-a2", "text": "A studio pricing page lists a versioning add-on bundled into its plan.", "stance": "refutes", "source_url": "example://studio-tool/pricing", "source_type": "company_page", "retrieved_at": "2020-04-15", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" }
+    ]
+  }
+}

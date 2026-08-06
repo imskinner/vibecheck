@@ -1,0 +1,69 @@
+{
+  "id": "synth-011-criterion-override",
+  "schema_version": 1,
+  "layer1": {
+    "name": "DockNote",
+    "one_liner": "Maintenance logbooks for small marina operators.",
+    "description": "Digital maintenance logs and inspection reminders for marinas under 200 berths. Desk research looked encouraging on reach; the conversations did not.",
+    "t0": "2022-09-01",
+    "outcome": "died",
+    "outcome_date": "2023-12-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "Pre-registered arithmetic beats accumulated evidence. Three supporting company-page claims say the channel exists; five primary conversations say it does not work, the sample size is met, and the criterion resolves refuted. Support must pin to 10 and ignore the desk claims entirely. This is what stops a founder's optimistic desk research from diluting an answer they already went and got — the whole reason the threshold is fixed at creation time rather than written after the interviews.",
+    "assumptions": [
+      {
+        "id": "dn-a1",
+        "statement": "At least 3 in 10 marina operators under 200 berths reply to outreach through the boating association directory within two weeks",
+        "category": "access",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "refuted",
+        "falsification_criterion": {
+          "applies_to": "marina operators under 200 berths listed in the boating association directory",
+          "observation": "contact listed operators and count replies within two weeks",
+          "metric": "count replying within two weeks",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 5
+        }
+      },
+      {
+        "id": "dn-a2",
+        "statement": "At least 5 in 10 marina operators under 200 berths have failed an inspection item in the past two years",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 3,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "marina operators under 200 berths",
+          "observation": "ask them to recall their last inspection outcome",
+          "metric": "count with a failed item in two years",
+          "comparator": "<",
+          "threshold": 5,
+          "sample_size": 10
+        }
+      }
+    ],
+    "claims": [
+      { "id": "dn-c1", "assumption_id": "dn-a1", "text": "The boating association publishes a public, filterable operator directory.", "stance": "supports", "source_url": "example://boating-association/directory", "source_type": "company_page", "retrieved_at": "2022-08-01", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "dn-c2", "assumption_id": "dn-a1", "text": "The directory lists contact emails for most member marinas.", "stance": "supports", "source_url": "example://boating-association/members", "source_type": "company_page", "retrieved_at": "2022-08-01", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "dn-c3", "assumption_id": "dn-a1", "text": "An association newsletter encourages members to engage with supplier outreach.", "stance": "supports", "source_url": "example://boating-association/newsletter", "source_type": "company_page", "retrieved_at": "2022-08-02", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" },
+
+      { "id": "dn-c4", "assumption_id": "dn-a1", "text": "An operator explains the listed address is a seasonal office nobody reads out of season.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-08-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "dn-c5", "assumption_id": "dn-a1", "text": "A second operator says supplier email goes to a shared inbox checked monthly.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-08-12", "retrieved_text": null, "confidence": "high" },
+      { "id": "dn-c6", "assumption_id": "dn-a1", "text": "A third operator never replies to unsolicited contact as policy.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-08-15", "retrieved_text": null, "confidence": "high" },
+      { "id": "dn-c7", "assumption_id": "dn-a1", "text": "A fourth listed operator did not reply within two weeks.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-08-18", "retrieved_text": null, "confidence": "medium" },
+      { "id": "dn-c8", "assumption_id": "dn-a1", "text": "A fifth operator replied, but only after a referral from a peer marina.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-08-22", "retrieved_text": null, "confidence": "medium" }
+    ]
+  }
+}

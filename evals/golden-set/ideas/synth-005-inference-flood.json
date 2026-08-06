@@ -1,0 +1,57 @@
+{
+  "id": "synth-005-inference-flood",
+  "schema_version": 1,
+  "layer1": {
+    "name": "RouteLedger",
+    "one_liner": "Delivery route reconciliation for regional courier firms.",
+    "description": "Reconciles driver-reported stops against dispatch records. Included because its synthesiser was unusually talkative: the ledger carries far more model inference than sourced evidence.",
+    "t0": "2022-01-01",
+    "outcome": "died",
+    "outcome_date": "2023-04-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The model_inference swing clamp, end to end through the runner rather than in a unit test. Twelve high-confidence inference claims sit against two sourced ones. The support value must land within 8 points of what the two sourced claims produce alone — if a future change lets the synthesiser's own opinions accumulate, this entry's score moves and the hard rule in PRD 5.3 has quietly stopped being a cap.",
+    "assumptions": [
+      {
+        "id": "rl-a1",
+        "statement": "At least 5 in 10 regional courier firms running 20 or more vehicles have written off more than $2000 in unreconciled stops in the past quarter",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 4,
+        "test_cost": 3,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "regional courier firms running 20 or more vehicles",
+          "observation": "ask the operations lead to pull last quarter's unreconciled stop total",
+          "metric": "count writing off more than $2000",
+          "comparator": "<",
+          "threshold": 5,
+          "sample_size": 10
+        }
+      }
+    ],
+    "claims": [
+      { "id": "rl-c1", "assumption_id": "rl-a1", "text": "An operations manager describes writing off unreconciled stops every quarter.", "stance": "supports", "source_url": "example://forum/logistics/1", "source_type": "public_post", "retrieved_at": "2021-12-01", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "rl-c2", "assumption_id": "rl-a1", "text": "A trade publication describes reconciliation as a persistent margin leak in regional courier work.", "stance": "supports", "source_url": "example://news/logistics-margins", "source_type": "news", "retrieved_at": "2021-12-02", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "medium" },
+
+      { "id": "rl-c3", "assumption_id": "rl-a1", "text": "No evidence found either way on write-off size for firms under 50 vehicles.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c4", "assumption_id": "rl-a1", "text": "Reconciliation gaps are plausibly larger where dispatch and driver systems are separate.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c5", "assumption_id": "rl-a1", "text": "Manual stop reconciliation is likely to scale poorly with fleet size.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c6", "assumption_id": "rl-a1", "text": "Quarterly close is a plausible point at which the loss becomes visible.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c7", "assumption_id": "rl-a1", "text": "Firms without dedicated operations staff plausibly absorb the loss silently.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c8", "assumption_id": "rl-a1", "text": "The write-off threshold is plausibly lower for firms on fixed-price contracts.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c9", "assumption_id": "rl-a1", "text": "Driver-reported data is likely to diverge from dispatch records over time.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c10", "assumption_id": "rl-a1", "text": "Seasonal peaks plausibly widen the reconciliation gap.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c11", "assumption_id": "rl-a1", "text": "Paper proof-of-delivery is plausibly correlated with larger gaps.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c12", "assumption_id": "rl-a1", "text": "Larger fleets plausibly have more tooling and smaller relative losses.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c13", "assumption_id": "rl-a1", "text": "The problem is plausibly worse in firms with high driver turnover.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "rl-c14", "assumption_id": "rl-a1", "text": "Subcontracted routes plausibly reconcile worse than owned ones.", "stance": "supports", "source_url": null, "source_type": "model_inference", "retrieved_at": "2021-12-03", "retrieved_text": null, "confidence": "high" }
+    ]
+  }
+}

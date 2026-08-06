@@ -1,0 +1,100 @@
+{
+  "id": "synth-010-weak-below-cap",
+  "schema_version": 1,
+  "layer1": {
+    "name": "MealMatch",
+    "one_liner": "AI meal planning with grocery delivery integration.",
+    "description": "Weekly meal plans generated from dietary preferences, with one-tap grocery ordering. Every load-bearing assumption was checked and every one came back false.",
+    "t0": "2020-01-01",
+    "outcome": "died",
+    "outcome_date": "2020-11-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The cap is a CEILING, not a floor. Every criterion resolved refuted, so the weighted mean lands near 10 — far below the 30 floor — and capBinding must be false, because min() takes the weighted mean rather than lifting it. Easy to break by implementing the cap as a clamp instead of a minimum, which would silently promote every hopeless idea to exactly 30 and destroy the bottom half of the scale. Note this entry resolves its criteria WITHOUT primary conversations, which is deliberate: refutation here came from desk research the founder accepted, and Evidence Quality is still 0.",
+    "assumptions": [
+      {
+        "id": "mm-a1",
+        "statement": "At least 4 in 10 households cooking 5 or more dinners a week have paid for a meal planning subscription in the past year",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "refuted",
+        "falsification_criterion": {
+          "applies_to": "households cooking 5 or more dinners a week",
+          "observation": "ask what they have paid for around meal planning in the past year",
+          "metric": "count who paid for a planning subscription",
+          "comparator": "<",
+          "threshold": 4,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "mm-a2",
+        "statement": "At least 2 in 10 target households can be reached for under $30 in paid acquisition cost",
+        "category": "access",
+        "origin": "red_team",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "refuted",
+        "falsification_criterion": {
+          "applies_to": "households cooking 5 or more dinners a week",
+          "observation": "run a small paid campaign and measure cost per signup",
+          "metric": "count of channels under $30 per signup",
+          "comparator": "<",
+          "threshold": 1,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "mm-a3",
+        "statement": "No incumbent grocery delivery app ships built-in meal planning within 12 months",
+        "category": "competition",
+        "origin": "red_team",
+        "impact": 5,
+        "uncertainty": 2,
+        "test_cost": 2,
+        "status": "refuted",
+        "falsification_criterion": {
+          "applies_to": "the four largest grocery delivery apps in the launch market",
+          "observation": "check each app's feature list and release notes for meal planning",
+          "metric": "count shipping meal planning",
+          "comparator": ">=",
+          "threshold": 1,
+          "sample_size": 4
+        }
+      },
+      {
+        "id": "mm-a4",
+        "statement": "The founder can secure grocery API access in at least 2 of 4 target retail chains within 6 months",
+        "category": "execution",
+        "origin": "red_team",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 4,
+        "status": "refuted",
+        "falsification_criterion": {
+          "applies_to": "the four target retail chains",
+          "observation": "request partner API access from each and record the outcome",
+          "metric": "count granting access",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 4
+        }
+      }
+    ],
+    "claims": [
+      { "id": "mm-c1", "assumption_id": "mm-a1", "text": "Category review pages cluster around cancellation within the first month.", "stance": "refutes", "source_url": "example://reviews/meal-planning", "source_type": "review_site", "retrieved_at": "2019-12-10", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "mm-c2", "assumption_id": "mm-a3", "text": "A major delivery app's release notes list a meal planning feature in beta.", "stance": "refutes", "source_url": "example://delivery-app/release-notes", "source_type": "company_page", "retrieved_at": "2019-12-12", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "mm-c3", "assumption_id": "mm-a3", "text": "A second delivery app's pricing page advertises weekly plan generation at no extra cost.", "stance": "refutes", "source_url": "example://delivery-app-b/pricing", "source_type": "company_page", "retrieved_at": "2019-12-12", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+      { "id": "mm-c4", "assumption_id": "mm-a4", "text": "Three of four target chains publish partner terms that exclude independent developers.", "stance": "refutes", "source_url": "example://retail-chain/partner-terms", "source_type": "company_page", "retrieved_at": "2019-12-15", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" }
+    ]
+  }
+}

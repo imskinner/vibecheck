@@ -1,0 +1,48 @@
+{
+  "id": "synth-007-conflicting-primary",
+  "schema_version": 1,
+  "layer1": {
+    "name": "PlotHold",
+    "one_liner": "Allotment plot waitlist management for municipal councils.",
+    "description": "Manages allotment waiting lists and plot turnover for local councils. The founder ran six interviews and got three answers each way — the honest outcome is that nothing was settled.",
+    "t0": "2023-01-01",
+    "outcome": "died",
+    "outcome_date": "2024-03-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "Conflicting primary evidence is not a verdict. Three supporting and three refuting conversations resolve to a support value near 50 with status 'mixed', and mixed counts as UNRESOLVED — so the confidence band stays at full width rather than narrowing as if the question had been answered. Evidence Quality still rises, because the conversations genuinely happened. The failure mode this guards against is a ledger that reads a stalemate as a moderate finding.",
+    "assumptions": [
+      {
+        "id": "ph-a1",
+        "statement": "At least 4 in 10 municipal allotment officers spend more than 3 hours a month manually updating waiting lists",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "mixed",
+        "falsification_criterion": {
+          "applies_to": "municipal allotment officers",
+          "observation": "ask them to walk through their last waiting-list update and time it",
+          "metric": "count spending 3+ hours a month",
+          "comparator": "<",
+          "threshold": 4,
+          "sample_size": 6
+        }
+      }
+    ],
+    "claims": [
+      { "id": "ph-c1", "assumption_id": "ph-a1", "text": "An officer describes a full afternoon each month reconciling the list by hand.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-11-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "ph-c2", "assumption_id": "ph-a1", "text": "A second officer reports roughly four hours a month across two sites.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-11-14", "retrieved_text": null, "confidence": "high" },
+      { "id": "ph-c3", "assumption_id": "ph-a1", "text": "A third officer describes the list as their least favourite recurring task.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-11-16", "retrieved_text": null, "confidence": "medium" },
+      { "id": "ph-c4", "assumption_id": "ph-a1", "text": "A fourth officer reports under an hour a month since moving to a shared spreadsheet.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-11-21", "retrieved_text": null, "confidence": "high" },
+      { "id": "ph-c5", "assumption_id": "ph-a1", "text": "A fifth council delegates the list to a volunteer at no staff cost.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-11-23", "retrieved_text": null, "confidence": "high" },
+      { "id": "ph-c6", "assumption_id": "ph-a1", "text": "A sixth officer reports the list is updated twice a year, not monthly.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-11-28", "retrieved_text": null, "confidence": "medium" }
+    ]
+  }
+}

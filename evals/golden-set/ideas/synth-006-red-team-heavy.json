@@ -1,0 +1,136 @@
+{
+  "id": "synth-006-red-team-heavy",
+  "schema_version": 1,
+  "layer1": {
+    "name": "ShiftCover",
+    "one_liner": "Last-minute shift backfill for independent pharmacies.",
+    "description": "Matches pharmacies with locum pharmacists when a shift falls through. The founder's own access assumption is well evidenced; the red-team pass then found five further ways the idea dies, none of them tested.",
+    "t0": "2021-06-01",
+    "outcome": "died",
+    "outcome_date": "2022-10-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "PRD 5.4.1's acknowledged cost, made observable. A thorough red team adds five uncovered high-impact assumptions, which dilutes Evidence Quality and tightens the cap — but must NOT crater the sub-score that already has real primary evidence behind it. Market Access stays at 90 while the composite falls, because what changed is what we know we do not know. If a future change lets red-team assumptions push sub-scores down directly, the pipeline starts punishing its own thoroughness and the standing temptation becomes softening the red team.",
+    "assumptions": [
+      {
+        "id": "sc-a1",
+        "statement": "At least 4 in 10 independent pharmacies contacted through the pharmacists' association directory reply to a cold outreach within a week",
+        "category": "access",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent pharmacies listed in the pharmacists' association directory",
+          "observation": "send cold outreach to listed pharmacies and count replies within a week",
+          "metric": "count replying within a week",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 4
+        }
+      },
+      {
+        "id": "sc-rt1",
+        "statement": "No incumbent pharmacy rostering system ships last-minute locum matching within 12 months",
+        "category": "competition",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 5,
+        "test_cost": 3,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the three most-used pharmacy rostering systems",
+          "observation": "review release notes and pricing pages for locum matching",
+          "metric": "count shipping locum matching",
+          "comparator": ">=",
+          "threshold": 1,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "sc-rt2",
+        "statement": "At least 5 in 10 locum pharmacists already using an agency have switched agencies at least once in the past two years",
+        "category": "icp",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 5,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "locum pharmacists currently working through an agency",
+          "observation": "ask them to walk through how they found their last three placements",
+          "metric": "count who have switched agencies in two years",
+          "comparator": "<",
+          "threshold": 5,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "sc-rt3",
+        "statement": "At least 3 in 10 independent pharmacies have paid an agency premium above $40/hr for an emergency locum in the past year",
+        "category": "willingness_to_pay",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 5,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "independent pharmacy owners",
+          "observation": "ask them to pull the invoice for their last emergency locum booking",
+          "metric": "count who paid above $40/hr",
+          "comparator": "<",
+          "threshold": 3,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "sc-rt4",
+        "statement": "Regulatory verification of locum credentials takes fewer than 3 business days in at least 4 of 5 sampled jurisdictions",
+        "category": "timing",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 5,
+        "test_cost": 4,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the five jurisdictions in the launch region",
+          "observation": "submit a verification request in each and time the response",
+          "metric": "count completing in under 3 business days",
+          "comparator": "<",
+          "threshold": 4,
+          "sample_size": 5
+        }
+      },
+      {
+        "id": "sc-rt5",
+        "statement": "The founder can staff overnight support coverage for at least 5 nights a week without a second hire",
+        "category": "execution",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 5,
+        "test_cost": 3,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "the founder's own schedule over one month",
+          "observation": "log which nights were actually covered",
+          "metric": "count nights covered per week",
+          "comparator": "<",
+          "threshold": 5,
+          "sample_size": 4
+        }
+      }
+    ],
+    "claims": [
+      { "id": "sc-c1", "assumption_id": "sc-a1", "text": "A pharmacy owner replied to a cold email within two days and booked a call.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-05-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "sc-c2", "assumption_id": "sc-a1", "text": "A second owner replied the same week and described the shift-cover problem unprompted.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-05-11", "retrieved_text": null, "confidence": "high" },
+      { "id": "sc-c3", "assumption_id": "sc-a1", "text": "A third pharmacy replied and forwarded the request to two peers.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-05-12", "retrieved_text": null, "confidence": "high" },
+      { "id": "sc-c4", "assumption_id": "sc-a1", "text": "A fourth pharmacy did not reply within the week.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-05-14", "retrieved_text": null, "confidence": "medium" }
+    ]
+  }
+}

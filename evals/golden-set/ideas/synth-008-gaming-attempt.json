@@ -1,0 +1,77 @@
+{
+  "id": "synth-008-gaming-attempt",
+  "schema_version": 1,
+  "layer1": {
+    "name": "TrailBill",
+    "one_liner": "Invoicing for independent hiking guides.",
+    "description": "Invoicing and deposit collection for solo hiking guides. Included because of how its evidence is distributed: fifteen conversations logged against the assumption that was cheapest to test, and none against the one that could kill the idea.",
+    "t0": "2022-06-01",
+    "outcome": "died",
+    "outcome_date": "2023-09-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "THE GAMING VECTOR, as an end-to-end regression test. Fifteen primary conversations sit against an impact-1 assumption and zero against the impact-5 one. Evidence Quality must stay near 17, not near 100 — coverage is impact-weighted, so testing the cheap thing thoroughly buys almost nothing. If a future change makes Evidence Quality a claim count or a plain ratio, this entry's score jumps and the cap becomes purchasable with busywork. That is the single most valuable thing in this directory to keep passing.",
+    "assumptions": [
+      {
+        "id": "tb-a1",
+        "statement": "At least 5 in 10 independent hiking guides running 20 or more trips a year have lost more than $500 to unpaid deposits in the past season",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 5,
+        "test_cost": 2,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "independent hiking guides running 20 or more trips a year",
+          "observation": "ask them to total their unpaid deposits from last season",
+          "metric": "count who lost more than $500",
+          "comparator": "<",
+          "threshold": 5,
+          "sample_size": 10
+        }
+      },
+      {
+        "id": "tb-a2",
+        "statement": "At least 8 in 10 independent hiking guides already send invoices from a phone rather than a laptop",
+        "category": "execution",
+        "origin": "canvas",
+        "impact": 1,
+        "uncertainty": 2,
+        "test_cost": 1,
+        "status": "untested",
+        "falsification_criterion": {
+          "applies_to": "independent hiking guides",
+          "observation": "ask which device they used to send their last invoice",
+          "metric": "count who used a phone",
+          "comparator": "<",
+          "threshold": 8,
+          "sample_size": 10
+        }
+      }
+    ],
+    "claims": [
+      { "id": "tb-c1", "assumption_id": "tb-a2", "text": "A guide confirms invoicing from a phone at the trailhead.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-02", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c2", "assumption_id": "tb-a2", "text": "A second guide invoices from a phone the same evening as the trip.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-02", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c3", "assumption_id": "tb-a2", "text": "A third guide has no laptop at all.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c4", "assumption_id": "tb-a2", "text": "A fourth guide invoices from a phone during the drive home.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-03", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c5", "assumption_id": "tb-a2", "text": "A fifth guide confirms phone-only invoicing.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-04", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c6", "assumption_id": "tb-a2", "text": "A sixth guide uses a phone for everything including bookings.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-04", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c7", "assumption_id": "tb-a2", "text": "A seventh guide confirms the same.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-05", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c8", "assumption_id": "tb-a2", "text": "An eighth guide invoices from a phone but drafts on a tablet.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-05", "retrieved_text": null, "confidence": "medium" },
+      { "id": "tb-c9", "assumption_id": "tb-a2", "text": "A ninth guide confirms phone invoicing.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-06", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c10", "assumption_id": "tb-a2", "text": "A tenth guide confirms phone invoicing.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-06", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c11", "assumption_id": "tb-a2", "text": "An eleventh guide invoices from a phone weekly.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-09", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c12", "assumption_id": "tb-a2", "text": "A twelfth guide confirms phone invoicing.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-09", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c13", "assumption_id": "tb-a2", "text": "A thirteenth guide confirms phone invoicing.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "tb-c14", "assumption_id": "tb-a2", "text": "A fourteenth guide uses a laptop at home instead.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-10", "retrieved_text": null, "confidence": "medium" },
+      { "id": "tb-c15", "assumption_id": "tb-a2", "text": "A fifteenth guide confirms phone invoicing.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2022-05-11", "retrieved_text": null, "confidence": "high" },
+
+      { "id": "tb-c16", "assumption_id": "tb-a1", "text": "A guiding forum thread mentions unpaid deposits as a recurring frustration.", "stance": "supports", "source_url": "example://forum/guiding/deposits", "source_type": "public_post", "retrieved_at": "2022-05-01", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "low" }
+    ]
+  }
+}

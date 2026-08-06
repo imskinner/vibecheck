@@ -1,0 +1,134 @@
+{
+  "id": "synth-012-full-coverage",
+  "schema_version": 1,
+  "layer1": {
+    "name": "ChairFill",
+    "one_liner": "Cancellation backfill for independent hair salons.",
+    "description": "Fills cancelled appointment slots from a standby list. Every assumption in the ledger reached its pre-registered sample size, so the cap sits at its ceiling and stops mattering.",
+    "t0": "2021-03-01",
+    "outcome": "succeeded",
+    "outcome_date": "2024-01-01",
+    "outcome_basis": "synthetic",
+    "outcome_note": "Synthetic fixture. Not a real company and not counted toward separation statistics.",
+    "sources": []
+  },
+  "layer2": {
+    "authored_by": "M0 seed",
+    "authored_at": "2026-08-05",
+    "pins": "The top of the cap's range, end to end. Every assumption reaches its sample size, so Evidence Quality is 100 and the cap is exactly 100 — the formula's ceiling, which constants.test.ts asserts arithmetically but nothing else demonstrates through the runner. capBinding must be false: at full coverage the cap stops constraining anything and the composite is set entirely by the evidence. This is what a founder who did the work is supposed to see, and it is the counterpart to synth-001, where the same pipeline is held to 30.",
+    "assumptions": [
+      {
+        "id": "cf-a1",
+        "statement": "At least 5 in 10 independent hair salons with 3 or more chairs lose more than 4 appointment slots a week to cancellations",
+        "category": "problem",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 3,
+        "test_cost": 2,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent hair salons with 3 or more chairs",
+          "observation": "ask the owner to pull last month's cancellation count from their booking system",
+          "metric": "count losing more than 4 slots a week",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 4
+        }
+      },
+      {
+        "id": "cf-a2",
+        "statement": "At least 3 in 10 independent salon owners already pay above $50 a month for booking software",
+        "category": "willingness_to_pay",
+        "origin": "canvas",
+        "impact": 4,
+        "uncertainty": 3,
+        "test_cost": 1,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent salon owners",
+          "observation": "ask them to list their current software line items and cost",
+          "metric": "count paying above $50 a month",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "cf-a3",
+        "statement": "At least 3 in 10 independent salons contacted through beauty supply distributor lists reply within a week",
+        "category": "access",
+        "origin": "canvas",
+        "impact": 5,
+        "uncertainty": 4,
+        "test_cost": 2,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "independent salons on beauty supply distributor lists",
+          "observation": "contact listed salons and count replies within a week",
+          "metric": "count replying within a week",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "cf-a4",
+        "statement": "No incumbent salon booking system ships automated standby backfill within 12 months",
+        "category": "competition",
+        "origin": "red_team",
+        "impact": 4,
+        "uncertainty": 3,
+        "test_cost": 3,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "the three most-used salon booking systems",
+          "observation": "review release notes and pricing pages for standby backfill",
+          "metric": "count shipping standby backfill",
+          "comparator": ">=",
+          "threshold": 1,
+          "sample_size": 3
+        }
+      },
+      {
+        "id": "cf-a5",
+        "statement": "The founder can complete at least 2 salon onboardings a week without an on-site visit",
+        "category": "execution",
+        "origin": "founder",
+        "impact": 3,
+        "uncertainty": 2,
+        "test_cost": 1,
+        "status": "supported",
+        "falsification_criterion": {
+          "applies_to": "the first onboarded salons",
+          "observation": "log how many completed onboarding remotely each week",
+          "metric": "count onboarded remotely per week",
+          "comparator": "<",
+          "threshold": 2,
+          "sample_size": 2
+        }
+      }
+    ],
+    "claims": [
+      { "id": "cf-c1", "assumption_id": "cf-a1", "text": "A salon owner pulled 6 cancelled slots for the previous week from their booking system.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-08", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c2", "assumption_id": "cf-a1", "text": "A second owner reports about 5 cancellations a week and keeps an informal standby list on paper.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-09", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c3", "assumption_id": "cf-a1", "text": "A third owner describes cancellations as their largest controllable revenue loss.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-10", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c4", "assumption_id": "cf-a1", "text": "A fourth owner reports fewer than 2 a week after introducing deposits.", "stance": "refutes", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-11", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "cf-c5", "assumption_id": "cf-a2", "text": "An owner lists booking software and a payments tool, both above the threshold.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-12", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c6", "assumption_id": "cf-a2", "text": "A second owner confirms monthly booking software spend well above $50.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-15", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c7", "assumption_id": "cf-a2", "text": "A third owner names three paid tools in their monthly stack.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-16", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "cf-c8", "assumption_id": "cf-a3", "text": "A distributor-listed salon replied within two days and booked a call.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-17", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c9", "assumption_id": "cf-a3", "text": "A second listed salon replied the same week without a warm introduction.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-18", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c10", "assumption_id": "cf-a3", "text": "A third listed salon replied after a follow-up.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-19", "retrieved_text": null, "confidence": "medium" },
+
+      { "id": "cf-c11", "assumption_id": "cf-a4", "text": "A booking vendor's product lead confirmed standby backfill is not on their roadmap.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-22", "retrieved_text": null, "confidence": "medium" },
+      { "id": "cf-c12", "assumption_id": "cf-a4", "text": "A second vendor's partner manager described backfill as out of scope for them.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-23", "retrieved_text": null, "confidence": "medium" },
+      { "id": "cf-c13", "assumption_id": "cf-a4", "text": "A third vendor's reseller confirmed no backfill capability in the current release.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-24", "retrieved_text": null, "confidence": "medium" },
+      { "id": "cf-c14", "assumption_id": "cf-a4", "text": "The largest vendor's pricing page lists no standby or waitlist feature at any tier.", "stance": "supports", "source_url": "example://salon-booking/pricing", "source_type": "company_page", "retrieved_at": "2021-02-02", "retrieved_text": "Synthetic fixture text. Not retrieved from any real source.", "confidence": "high" },
+
+      { "id": "cf-c15", "assumption_id": "cf-a5", "text": "Two salons completed onboarding over a video call in the first week.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-25", "retrieved_text": null, "confidence": "high" },
+      { "id": "cf-c16", "assumption_id": "cf-a5", "text": "A third salon completed onboarding remotely the following week.", "stance": "supports", "source_url": null, "source_type": "primary_conversation", "retrieved_at": "2021-02-26", "retrieved_text": null, "confidence": "high" }
+    ]
+  }
+}
