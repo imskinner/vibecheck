@@ -104,11 +104,28 @@ export async function mapCompetitors(
     return { landscape: null, reason: 'output was not an object', rejected, warnings }
   }
 
+  // Tolerant label read: under big-input conditions the model sometimes keys the axes
+  // differently ({x, y}, camelCase). Labels are display text — leniency here costs nothing,
+  // and when it still fails the reason carries the raw head so the next failure is diagnosable
+  // without another paid run.
+  const readLabel = (source: unknown, keys: string[]): string | null => {
+    if (!isObject(source)) return null
+    for (const key of keys) {
+      const value = source[key]
+      if (typeof value === 'string' && value.trim() !== '') return value.trim()
+    }
+    return null
+  }
   const axesRaw = raw['axes']
-  const xLabel = isObject(axesRaw) ? axesRaw['x_label'] : undefined
-  const yLabel = isObject(axesRaw) ? axesRaw['y_label'] : undefined
-  if (typeof xLabel !== 'string' || xLabel.trim() === '' || typeof yLabel !== 'string' || yLabel.trim() === '') {
-    return { landscape: null, reason: 'axes are missing or unlabelled', rejected, warnings }
+  const xLabel = readLabel(axesRaw, ['x_label', 'xLabel', 'x', 'x_axis'])
+  const yLabel = readLabel(axesRaw, ['y_label', 'yLabel', 'y', 'y_axis'])
+  if (xLabel === null || yLabel === null) {
+    return {
+      landscape: null,
+      reason: `axes are missing or unlabelled — raw head: ${JSON.stringify(raw).slice(0, 300)}`,
+      rejected,
+      warnings,
+    }
   }
 
   const ideaRaw = raw['idea_position']
@@ -204,7 +221,7 @@ export async function mapCompetitors(
 
   return {
     landscape: {
-      axes: { xLabel: xLabel.trim(), yLabel: yLabel.trim() },
+      axes: { xLabel, yLabel },
       ideaPosition: { x: ideaX, y: ideaY },
       competitors,
       emptySpace: emptySpace.trim(),

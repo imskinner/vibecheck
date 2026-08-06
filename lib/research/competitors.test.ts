@@ -120,6 +120,20 @@ describe('mapCompetitors', () => {
     expect(result.reason).toMatch(/idea position/)
   })
 
+  it('reads axes tolerantly across key variants', async () => {
+    const model = createScriptedModelClient([
+      emission({ axes: { x: 'Compliance story', y: 'Reporting depth' } }),
+    ])
+    const result = await mapCompetitors(canvas, ledger(), { model })
+    expect(result.landscape!.axes).toEqual({ xLabel: 'Compliance story', yLabel: 'Reporting depth' })
+  })
+
+  it('carries the raw head in the reason when axes still fail', async () => {
+    const model = createScriptedModelClient([emission({ axes: { horizontal: 'nope' } })])
+    const result = await mapCompetitors(canvas, ledger(), { model })
+    expect(result.reason).toMatch(/axes are missing.*raw head: \{"axes"/)
+  })
+
   it('clamps out-of-range positions instead of rejecting them', async () => {
     const model = createScriptedModelClient([
       emission({ idea_position: { x: 140, y: -10 }, competitors: [entry(), entry({ name: 'B' }), entry({ name: 'C' })] }),
