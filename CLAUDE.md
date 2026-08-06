@@ -126,6 +126,19 @@ Consequences that are easy to violate by accident:
 - **The planner is deterministic code, not an agent.** Three agent roles: researcher (parallel),
   synthesizer, red-team. Decomposing a ledger into research tasks is a loop, and making it an agent
   injects variance upstream of the stability target.
+- **Adapters return `SourceDocument`, not `Claim`** — a deliberate deviation from the interface
+  sketched in §5.5, documented in `lib/research/adapters/types.ts`. Adapters are access and
+  compliance; judging stance is model work. §5.5's rules are unchanged.
+- **`extract-claims.ts` is the only place a source-backed claim is minted**, and provenance
+  (`source_url`, `source_type`, `retrieved_at`, `retrieved_text`) is copied from the document the
+  code already holds — never read from model output. The model cites a document *index*. It cannot
+  fabricate a citation; there is no field that accepts one. Kill criterion 3 is why that had to be
+  structural rather than instructional. Do not add a URL field to that tool schema.
+- **Every LLM stage goes through `ModelClient`** (`lib/research/model.ts`). No provider SDK is
+  imported anywhere. This keeps model IDs pinned per stage, keeps stages testable with no API key,
+  and gives caching and cost accounting one home.
+- **Adapters enforce the knowledge cutoff twice** — at the API and on the results. An adapter that
+  leaks post-`t0` documents silently invalidates every blind-scoring number in §7.
 - **Assumption status is arithmetic, not judgment.** `falsification_criterion` is a structured
   predicate fixed at creation time and evaluated by code once `sample_size` primary claims land.
   The LLM proposes claim→assumption mapping; the user approves it; the arithmetic decides.
