@@ -1,0 +1,22 @@
+{
+  "id": "gumroad-2011",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Gumroad",
+    "one_liner": "A single link that lets a creator sell anything directly to their audience.",
+    "description": "Sellers upload a file, set a price, share a link, and get paid, with the platform taking a percentage. Positioned against both marketplaces and full ecommerce stacks.",
+    "t0": "2011-05-01",
+    "outcome": "succeeded",
+    "outcome_date": "2024-01-26",
+    "outcome_basis": "public_record",
+    "outcome_note": "Reported $20.7M revenue and $8.9M net profit for 2023, publicly, by the founder. Notable as a company that nearly failed and was rebuilt as a small profitable business rather than a growth one.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://x.com/shl/status/1750844207214788764",
+        "note": "Founder's public disclosure of 2023 revenue and profit",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

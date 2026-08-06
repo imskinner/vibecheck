@@ -1,0 +1,22 @@
+{
+  "id": "ghost-2013",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Ghost",
+    "one_liner": "An open-source publishing platform for professional writers.",
+    "description": "A stripped-down alternative to general-purpose CMS software, focused only on publishing and newsletters. Open source, with paid managed hosting. Entering a category dominated by an incumbent with overwhelming market share.",
+    "t0": "2013-04-01",
+    "outcome": "succeeded",
+    "outcome_date": "2026-08-05",
+    "outcome_basis": "public_record",
+    "outcome_note": "Independent and profitable. Publishes its annual run rate publicly: $10,947,413 at the time of retrieval.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://ghost.org/about/",
+        "note": "Public ARR figure on the company about page",
+        "verified": "fetched"
+      }
+    ]
+  }
+}

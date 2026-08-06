@@ -1,0 +1,27 @@
+{
+  "id": "fathom-analytics-2018",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Fathom Analytics",
+    "one_liner": "Privacy-focused website analytics that does not use cookies.",
+    "description": "A simple analytics dashboard positioned on privacy compliance and speed, sold as a subscription. Began as an open-source side project before becoming a hosted paid product.",
+    "t0": "2018-01-01",
+    "outcome": "succeeded",
+    "outcome_date": "2025-01-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped with no outside funding to thousands of paying customers, profitable enough to pay both founders full time. Revenue figures are less precisely disclosed than the other entries here.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://thebootstrappedfounder.com/jack-ellis-taking-on-google-as-a-bootstrapper/",
+        "note": "Co-founder interview on bootstrapping against Google Analytics",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://usefathom.com/author/paul-jarvis",
+        "note": "Co-founder page on the company site",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "oratio-2018",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Oratio",
+    "one_liner": "A platform for businesses to run customer support through chat messengers.",
+    "description": "Let small businesses handle customer conversations across messaging apps from one inbox, with chatbot automation for common questions. Built during the period when messaging platforms were opening to third-party bots.",
+    "t0": "2016-06-01",
+    "outcome": "died",
+    "outcome_date": "2018-04-24",
+    "outcome_basis": "public_record",
+    "outcome_note": "Closed as the founder's third startup. The postmortem, 'From hero to zero', describes building into a hyped category whose promised platform distribution did not materialise.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/oratio--2018-04-24--from-hero-to-zero-closing-my-3rd-startup/",
+        "note": "Founder's postmortem",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

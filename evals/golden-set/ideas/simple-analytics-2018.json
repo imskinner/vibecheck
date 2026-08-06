@@ -1,0 +1,22 @@
+{
+  "id": "simple-analytics-2018",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Simple Analytics",
+    "one_liner": "Privacy-first website analytics with no cookies.",
+    "description": "A minimal analytics script that collects no personal data, sold as a subscription. Started as a solo project directly against a free incumbent, in the same window as several similar competitors.",
+    "t0": "2018-06-01",
+    "outcome": "succeeded",
+    "outcome_date": "2025-01-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped from a few hundred dollars MRR in the first weeks to a reported $35k+ MRR with a two-person team, later above $50k MRR. Operates as an open startup, publishing its numbers.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://www.indiehackers.com/interview/how-i-started-a-business-with-two-lines-of-code-37f3d5348e",
+        "note": "Founder's interview covering early revenue",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

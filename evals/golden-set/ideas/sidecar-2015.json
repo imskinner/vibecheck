@@ -1,0 +1,22 @@
+{
+  "id": "sidecar-2015",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Sidecar",
+    "one_liner": "Peer-to-peer ridesharing where drivers set their own prices.",
+    "description": "One of the first ridesharing apps, letting private drivers name a price and passengers choose among them. Later added a shared-ride and package-delivery product.",
+    "t0": "2012-06-01",
+    "outcome": "died",
+    "outcome_date": "2015-12-29",
+    "outcome_basis": "public_record",
+    "outcome_note": "Ceased operations, with assets later acquired by General Motors. Outspent and out-scaled by two better-funded competitors in the same category. A competitive-wedge failure rather than a demand failure.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/sidecar--2015-12-29--so-long-sidecar-and-thanks/",
+        "note": "Shutdown announcement",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

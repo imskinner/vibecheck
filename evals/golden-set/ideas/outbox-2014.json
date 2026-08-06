@@ -1,0 +1,22 @@
+{
+  "id": "outbox-2014",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Outbox",
+    "one_liner": "Postal mail digitised: they collected your physical mail and scanned it for you.",
+    "description": "Subscribers redirected their postal mail to Outbox, who collected, scanned and delivered it digitally, with the option to have originals kept or shredded. $4.99/month.",
+    "t0": "2012-06-01",
+    "outcome": "died",
+    "outcome_date": "2014-01-21",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down after the operational cost of physically collecting mail proved unsustainable and the postal service declined to cooperate. Loved by its users; the economics and a required partner both failed.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/outbox--2014-01-21--outbox-is-shutting-down-a-note-of-gratitude/",
+        "note": "Founders' shutdown note",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

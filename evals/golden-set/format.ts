@@ -39,9 +39,31 @@ export type OutcomeBasis = (typeof OUTCOME_BASES)[number]
 /** Synthetic fixtures use this scheme so a fixture citation can never be mistaken for a real one. */
 export const SYNTHETIC_URL_SCHEME = 'example://'
 
+/**
+ * How likely it is that a model has already read this outcome. A famous shutdown is not a blind
+ * test: the pipeline can recall the ending rather than derive it, which inflates separation for
+ * reasons that have nothing to do with the scoring function. M5 should report separation over the
+ * whole set AND over `low` + `medium` only, and treat the second number as the real one.
+ *
+ * Required on public_record entries, because it is a judgement the contributor has to make
+ * consciously rather than a field that quietly defaults.
+ */
+export const CONTAMINATION_RISKS = ['low', 'medium', 'high'] as const
+export type ContaminationRisk = (typeof CONTAMINATION_RISKS)[number]
+
+/**
+ * How the source was checked. `fetched` means the page was loaded and its content confirmed the
+ * claim; `search_result` means a search engine returned this URL with a title matching the claim
+ * but the page was not opened. The distinction is worth keeping: a golden set whose sourcing
+ * cannot be audited is not evidence, and this is the field that makes spot-checking possible.
+ */
+export const SOURCE_VERIFICATIONS = ['fetched', 'search_result'] as const
+export type SourceVerification = (typeof SOURCE_VERIFICATIONS)[number]
+
 export interface GoldenSource {
   url: string
   note: string
+  verified?: SourceVerification
 }
 
 export interface GoldenLayer1 {
@@ -54,6 +76,8 @@ export interface GoldenLayer1 {
   outcome_date: string
   outcome_basis: OutcomeBasis
   outcome_note: string
+  /** Required for public_record entries. See CONTAMINATION_RISKS. */
+  contamination_risk?: ContaminationRisk
   sources: GoldenSource[]
 }
 
@@ -115,11 +139,28 @@ export function validateGoldenIdea(raw: unknown): ValidationResult {
   }
 
   const synthetic = l1['outcome_basis'] === 'synthetic'
+
+  if (!synthetic && !includes(CONTAMINATION_RISKS, l1['contamination_risk'])) {
+    err(`layer1.contamination_risk is required for a public_record entry (${CONTAMINATION_RISKS.join(', ')})`)
+  }
+
   const sources = l1['sources']
   if (!Array.isArray(sources)) err('layer1.sources must be an array')
   else if (!synthetic && sources.length === 0) {
     // A real outcome with no sourcing is an assertion, not a record.
     err('layer1.sources must contain at least one source for a public_record entry')
+  } else {
+    sources.forEach((source, i) => {
+      if (!isObject(source)) return err(`layer1.sources[${i}] is not an object`)
+      if (!isNonEmptyString(source['url'])) err(`layer1.sources[${i}].url must be a non-empty string`)
+      if (!isNonEmptyString(source['note'])) err(`layer1.sources[${i}].note must be a non-empty string`)
+      if (source['verified'] !== undefined && !includes(SOURCE_VERIFICATIONS, source['verified'])) {
+        err(`layer1.sources[${i}].verified must be one of ${SOURCE_VERIFICATIONS.join(', ')}`)
+      }
+      if (!synthetic && isNonEmptyString(source['url']) && !/^https?:\/\//.test(source['url'])) {
+        err(`layer1.sources[${i}].url must be an http(s) URL in a public_record entry`)
+      }
+    })
   }
 
   if (isIsoDate(l1['t0']) && isIsoDate(l1['outcome_date']) && l1['outcome_date'] < l1['t0']) {

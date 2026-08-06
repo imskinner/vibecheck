@@ -1,0 +1,22 @@
+{
+  "id": "bannerbear-2019",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Bannerbear",
+    "one_liner": "An API that generates social images and banners automatically.",
+    "description": "Developers post data to an API and get back rendered images from a template — social cards, certificates, ecommerce banners. Solo founder, developer-tool pricing, after a string of earlier failed products.",
+    "t0": "2019-06-01",
+    "outcome": "succeeded",
+    "outcome_date": "2025-02-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped past $10k MRR in roughly two years and reported around $630k ARR by early 2025. The founder published the revenue journey publicly throughout.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://www.bannerbear.com/journey-to-10k-mrr/",
+        "note": "Founder's own write-up of bootstrapping to $10k MRR",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "balsamiq-2008",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Balsamiq",
+    "one_liner": "Wireframing software that deliberately looks hand-drawn.",
+    "description": "A mockup tool whose sketchy visual style keeps reviewers arguing about structure rather than pixels. Built nights and weekends by one person before he quit his job, sold as a desktop licence.",
+    "t0": "2008-03-01",
+    "outcome": "succeeded",
+    "outcome_date": "2024-12-31",
+    "outcome_basis": "public_record",
+    "outcome_note": "Reached $100k revenue within five months and over $2M within two years, with no outside funding. Reported around $6.58M revenue in 2024. The founder has published company numbers throughout.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Balsamiq",
+        "note": "Company history, founding date and bootstrapped status",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://mixergy.com/interviews/balsamiq-peldi-guilizzoni-interview/",
+        "note": "Founder interview on reaching $2M in sales in 18 months",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "drawquest-2014",
+  "schema_version": 1,
+  "layer1": {
+    "name": "DrawQuest",
+    "one_liner": "A daily drawing prompt app for iPad, for people who cannot draw.",
+    "description": "Every day a new prompt; users drew a response with simple tools and shared it. Free, with paid coins for extra brushes and colours. Strong engagement among the users it had at t0.",
+    "t0": "2013-02-01",
+    "outcome": "died",
+    "outcome_date": "2014-01-21",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down despite good retention among existing users, because the paid-coin model produced too little revenue per user and the user base was not growing fast enough to compensate.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/drawquest--2014-01-21--today-my-startup-failed/",
+        "note": "Founder's postmortem, 'Today my startup failed'",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

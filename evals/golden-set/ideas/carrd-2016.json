@@ -1,0 +1,22 @@
+{
+  "id": "carrd-2016",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Carrd",
+    "one_liner": "A builder for simple, responsive, one-page websites.",
+    "description": "Deliberately scoped to single-page sites only, at $19/year. Built and run by one person, entering the most crowded software category there is.",
+    "t0": "2016-01-01",
+    "outcome": "succeeded",
+    "outcome_date": "2021-01-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped to over $1M ARR as a solo founder, hosting millions of sites. Later reported above $1.5M ARR.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://www.indiehackers.com/post/hi-im-aj-maker-of-carrd-and-after-2-5m-sites-1m-arr-and-a-funding-round-probably-time-for-an-ama-1b7fcf52fe",
+        "note": "Founder's AMA disclosing $1M ARR and 2.5M sites",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

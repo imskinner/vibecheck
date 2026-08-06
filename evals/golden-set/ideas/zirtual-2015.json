@@ -1,0 +1,22 @@
+{
+  "id": "zirtual-2015",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Zirtual",
+    "one_liner": "Subscription virtual assistants for busy professionals, from $199/month.",
+    "description": "Matched customers with a dedicated US-based assistant on a monthly plan. Assistants were employees rather than contractors, which was the quality pitch and the cost structure.",
+    "t0": "2011-01-01",
+    "outcome": "died",
+    "outcome_date": "2015-08-12",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down abruptly, laying off staff overnight before a partial restart under new ownership. The postmortem centres on unit economics: employee assistants at that price point did not cover their own cost.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/zirtual--2015-08-12--what-happened-and-whats-next/",
+        "note": "Founder's account of the shutdown",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

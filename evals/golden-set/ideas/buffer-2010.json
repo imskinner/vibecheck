@@ -1,0 +1,27 @@
+{
+  "id": "buffer-2010",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Buffer",
+    "one_liner": "Schedule social media posts to go out at the best times.",
+    "description": "Queue posts once and have them published on a schedule across accounts. Started as a two-page landing test before any product existed, sold as a low-priced subscription.",
+    "t0": "2010-11-01",
+    "outcome": "succeeded",
+    "outcome_date": "2026-08-05",
+    "outcome_basis": "public_record",
+    "outcome_note": "Publishes its revenue openly. Around $25.9M ARR and $2.2M MRR at the time of retrieval, with roughly 239,000 monthly active users.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://buffer.com/open",
+        "note": "Public transparency dashboard",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://buffer.com/metrics",
+        "note": "Live public revenue and customer metrics",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

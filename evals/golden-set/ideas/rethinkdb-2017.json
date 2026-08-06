@@ -1,0 +1,22 @@
+{
+  "id": "rethinkdb-2017",
+  "schema_version": 1,
+  "layer1": {
+    "name": "RethinkDB",
+    "one_liner": "An open-source distributed document database built for realtime apps.",
+    "description": "A database with a push-based query model, so applications could subscribe to changes instead of polling. Open source core, with a planned commercial offering around hosting and support.",
+    "t0": "2012-01-01",
+    "outcome": "died",
+    "outcome_date": "2017-01-18",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down and later donated to the Linux Foundation. The founders' postmortem, \"Why we failed\", identifies chasing a developer market that does not pay, and competing on a metric users cared about less than they claimed.",
+    "contamination_risk": "high",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/rethinkdb--2017-01-18--why-we-failed/",
+        "note": "Founders' postmortem, 'Why we failed'",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

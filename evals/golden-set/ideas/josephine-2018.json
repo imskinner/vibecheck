@@ -1,0 +1,22 @@
+{
+  "id": "josephine-2018",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Josephine",
+    "one_liner": "A marketplace for home-cooked meals sold by neighbourhood cooks.",
+    "description": "Home cooks listed meals, neighbours ordered and collected them. Positioned as income for cooks and better food for buyers, with Josephine taking a percentage.",
+    "t0": "2014-06-01",
+    "outcome": "died",
+    "outcome_date": "2018-02-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Closed after failing to resolve the food-safety regulation that made home kitchens illegal to sell from in most jurisdictions. The demand was demonstrable; the legal route to serving it was not.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/josephine--2018-02-01--josephine-is-closing-its-doors/",
+        "note": "Founders' closing letter",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

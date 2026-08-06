@@ -1,0 +1,27 @@
+{
+  "id": "nuzzel-2021",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Nuzzel",
+    "one_liner": "A daily email of the stories most shared by the people you follow on Twitter.",
+    "description": "Read your social graph rather than your timeline: Nuzzel surfaced the articles being shared by people you already followed, as a daily digest. Free, with a paid tier for media professionals. Entirely dependent on Twitter API access.",
+    "t0": "2014-01-01",
+    "outcome": "died",
+    "outcome_date": "2021-05-06",
+    "outcome_basis": "public_record",
+    "outcome_note": "Discontinued after Twitter acquired its parent company. The founder wrote that it was no longer possible to sustain Nuzzel as a standalone service. A platform-dependency death — the same failure mode as GummySearch in PRD §5.5.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://blog.nuzzel.com/nuzzel-is-going-away-for-now/",
+        "note": "Founder's own shutdown announcement",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://daringfireball.net/linked/2021/05/05/nuzzel",
+        "note": "Contemporaneous coverage of the shutdown",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

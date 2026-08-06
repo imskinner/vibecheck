@@ -1,0 +1,27 @@
+{
+  "id": "transistor-2018",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Transistor.fm",
+    "one_liner": "Podcast hosting and analytics for people who publish more than one show.",
+    "description": "Hosting with unlimited shows per account, private podcasts and distribution analytics, sold as a subscription. Two founders, entering a category with entrenched incumbents.",
+    "t0": "2018-02-01",
+    "outcome": "succeeded",
+    "outcome_date": "2021-05-24",
+    "outcome_basis": "public_record",
+    "outcome_note": "Went from $33 in monthly revenue at launch to over $1M ARR without outside investment. Later reported serving thousands of paying accounts.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://transistor.fm/justin/",
+        "note": "Co-founder's page on the company site",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://words.sandhillroad.io/2021/05/24/bootstrapping-from-zero-to-1m-in-arr-with-justin-jackson-mega-maker-of-transistor-fm/",
+        "note": "Interview covering the path to $1M ARR",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

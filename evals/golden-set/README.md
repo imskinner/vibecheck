@@ -3,11 +3,16 @@
 30 real ideas with known outcomes at a chosen point in time — 15 that died, 15 that reached
 meaningful revenue. Sourced from public postmortems, Indie Hackers, and shutdown posts.
 
-**Status: 12 synthetic fixtures, 0 real entries.** The fixtures clear the M0 gate — 12 entries
-score headless — and pin the scoring function's behaviour as a regression suite. They are excluded
-from separation statistics and **cannot substitute for the 30 real entries M5 needs**: an
-instrument calibrated on invented outcomes measures nothing about the world. See
-[Contributing an entry](#contributing-an-entry).
+**Status: 28 real entries (14 died, 14 succeeded), 2 short of 30. Plus 12 synthetic fixtures.**
+
+The two sets do different jobs and are never mixed. The **fixtures** clear the M0 gate and pin the
+scoring function's behaviour as a regression suite; they are excluded from separation statistics
+because an instrument calibrated on invented outcomes measures nothing about the world. The **real
+entries** are the M5 instrument. None has a fixture ledger yet, so none is scored — the pipeline
+generates Layer 2 from M1.
+
+Of the 28 real entries, 15 are low-contamination and 11 medium; 2 are high. `npm run eval` prints
+that breakdown every run.
 
 If the golden set shows no separation, that is the kill signal for Vibecheck itself (PRD §10).
 Say so out loud rather than shipping anyway.
@@ -55,12 +60,33 @@ One JSON file per idea in `ideas/`, named `<outcome-slug>.json`. Validated by `f
     "outcome_basis": "public_record",    // "public_record" | "synthetic"
     "outcome_note": "Shut down; founder published a postmortem citing no repeat purchase.",
 
-    "sources": [                         // required for public_record entries
-      { "url": "https://…", "note": "Founder's shutdown post" }
+    // How likely a model has already read this outcome. Required for public_record.
+    // See "Contamination" below — this is a judgement you have to make, not a formality.
+    "contamination_risk": "low",         // "low" | "medium" | "high"
+
+    "sources": [                         // required for public_record entries; must be http(s)
+      {
+        "url": "https://…",
+        "note": "Founder's shutdown post",
+        // "fetched" = you opened the page and it says what you claim.
+        // "search_result" = a search returned this URL with a matching title, unopened.
+        "verified": "fetched"
+      }
     ]
   }
 }
 ```
+
+### Contamination
+
+A famous outcome is not a blind test. If the pipeline can recall that a company shut down rather
+than derive it from what was knowable at `t0`, separation goes up for reasons that have nothing to
+do with the scoring function — and M5's kill criterion becomes unfalsifiable in the flattering
+direction.
+
+So every real entry declares its risk, and **M5 must report separation twice**: once over the whole
+set, once over `low` + `medium` only. The second number is the real one. Prefer obscure entries;
+they are harder to source and worth the effort.
 
 ### Choosing `t0`
 

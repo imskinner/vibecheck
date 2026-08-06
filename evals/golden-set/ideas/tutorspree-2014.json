@@ -1,0 +1,22 @@
+{
+  "id": "tutorspree-2014",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Tutorspree",
+    "one_liner": "A marketplace connecting students with vetted local in-person tutors.",
+    "description": "Parents searched by subject and location, Tutorspree vetted the tutors and took a cut of each booking. Two-sided marketplace, acquisition driven almost entirely by organic search at t0.",
+    "t0": "2011-06-01",
+    "outcome": "died",
+    "outcome_date": "2014-01-06",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down after a Google algorithm change removed the organic search traffic the business ran on. The postmortem is titled \"When SEO fails\". A pure Market Access death: the problem and the product were fine, the channel disappeared.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/tutorspree--2014-01-06--when-seo-fails/",
+        "note": "Founder's postmortem, 'When SEO fails'",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "rewardful-2017",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Rewardful",
+    "one_liner": "Affiliate and referral programs for SaaS companies, built on Stripe.",
+    "description": "Connect a Stripe account and Rewardful tracks referrals, commissions and payouts without custom code. Narrow by design: only for companies already billing through Stripe.",
+    "t0": "2017-06-01",
+    "outcome": "succeeded",
+    "outcome_date": "2024-12-31",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped with no outside funding to a reported $2.8M revenue and around 2,600 customers. Weakest sourcing in this set: the revenue figure comes from a third-party database, not the founders.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://getlatka.com/companies/rewardful",
+        "note": "Third-party revenue database entry. Secondary source — verify against a founder disclosure before relying on this entry",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

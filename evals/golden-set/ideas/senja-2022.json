@@ -1,0 +1,27 @@
+{
+  "id": "senja-2022",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Senja",
+    "one_liner": "Collect video and text testimonials and publish them anywhere.",
+    "description": "Customers record a testimonial through a link; the product turns them into embeddable walls, widgets and images. Two founders who met online, building in public from zero.",
+    "t0": "2022-06-01",
+    "outcome": "succeeded",
+    "outcome_date": "2025-11-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped from $0 to over $1M ARR (roughly $83k MRR) with more than 3,000 customers and no investors. The founders published each revenue milestone as they hit it.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://senja.io/blog/from-0-to-250-mrr-how-we-broke-out-of-absolute-zero",
+        "note": "Founders' post on the first $250 MRR",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://senja.io/blog/from-0-to-5k-after-a-year-indie-hacking",
+        "note": "Founders' post on the first year to $5k",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

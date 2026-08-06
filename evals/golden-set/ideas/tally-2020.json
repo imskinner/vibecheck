@@ -1,0 +1,27 @@
+{
+  "id": "tally-2020",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Tally",
+    "one_liner": "A form builder that works like a text document.",
+    "description": "Forms are typed like a document rather than assembled from blocks, with almost everything free and a paid tier for advanced features. Two founders, entering a category with several large established players.",
+    "t0": "2020-01-01",
+    "outcome": "succeeded",
+    "outcome_date": "2025-01-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped from $30k ARR after year one to a reported $4M+ ARR with a deliberately small team and no outside investment.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://www.indiehackers.com/post/i-co-founded-tally-a-new-type-of-form-builder-1-year-ago-and-bootstrapped-it-to-30k-arr-with-a-team-of-2-ama-bb864f23ab",
+        "note": "Founder's AMA at $30k ARR after one year",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://blog.tally.so/author/marie/",
+        "note": "Co-founder's posts on the company blog, including revenue milestones",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

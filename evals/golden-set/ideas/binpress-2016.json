@@ -1,0 +1,22 @@
+{
+  "id": "binpress-2016",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Binpress",
+    "one_liner": "A marketplace where developers sell source code components and plugins.",
+    "description": "Developers listed reusable components with licensing handled by the platform; other developers bought them rather than building from scratch. Binpress took a commission on each sale.",
+    "t0": "2011-01-01",
+    "outcome": "died",
+    "outcome_date": "2016-02-11",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down after failing to build enough liquidity on either side of the marketplace, in a category where the free alternative — open source — kept improving.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/binpress--2016-02-11--startup-postmortem/",
+        "note": "Founder's postmortem",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

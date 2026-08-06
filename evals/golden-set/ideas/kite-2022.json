@@ -1,0 +1,27 @@
+{
+  "id": "kite-2022",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Kite",
+    "one_liner": "AI-powered code completion for developers, as a free editor plugin.",
+    "description": "A desktop plugin that suggested whole lines and functions as developers typed, trained on public code. Free to use, with a paid Pro tier planned for teams. At t0 it had strong developer adoption and no proven way to charge for it.",
+    "t0": "2019-01-28",
+    "outcome": "died",
+    "outcome_date": "2022-11-16",
+    "outcome_basis": "public_record",
+    "outcome_note": "Shut down and open-sourced. The founder's postmortem gives two reasons: the technology was roughly a decade too early, and the product reached ~500k monthly active developers without ever monetising.",
+    "contamination_risk": "high",
+    "sources": [
+      {
+        "url": "https://news.ycombinator.com/item?id=33685209",
+        "note": "Hacker News discussion of the shutdown and open-sourcing announcement",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://news.slashdot.org/story/22/11/22/2153257/ai-assisted-coding-start-up-kite-is-saying-farewell-and-open-sourcing-its-code",
+        "note": "Slashdot coverage of the farewell post",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

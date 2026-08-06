@@ -1,0 +1,22 @@
+{
+  "id": "pinboard-2009",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Pinboard",
+    "one_liner": "Fast, no-nonsense bookmarking for people who read a lot.",
+    "description": "A deliberately plain bookmarking service with full-text archiving, sold for a small annual fee. Launched into a category where the dominant free incumbent had just been acquired and neglected.",
+    "t0": "2009-07-01",
+    "outcome": "succeeded",
+    "outcome_date": "2020-12-31",
+    "outcome_basis": "public_record",
+    "outcome_note": "Profitable one-person business for over a decade. The founder published annual revenue, which ranged between roughly $117k and $259k a year from 2010 to 2020, on very low operating costs.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Pinboard_(website)",
+        "note": "Covers the business model, solo operation and published revenue history",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

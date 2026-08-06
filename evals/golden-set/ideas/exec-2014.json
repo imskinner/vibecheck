@@ -1,0 +1,22 @@
+{
+  "id": "exec-2014",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Exec",
+    "one_liner": "On-demand errands: someone competent for $25/hour, in under an hour.",
+    "description": "An app that dispatched a vetted person to do whatever a customer needed — errands, moving, assembly — billed hourly. Later narrowed to on-demand home cleaning.",
+    "t0": "2012-07-01",
+    "outcome": "died",
+    "outcome_date": "2014-03-11",
+    "outcome_basis": "public_record",
+    "outcome_note": "Wound down and sold. The founder's postmortem on online-to-offline businesses concludes the general-purpose errand model could not be made to work economically, and that the cleaning pivot was a different business.",
+    "contamination_risk": "low",
+    "sources": [
+      {
+        "url": "https://postmortem.io/shutdowns/exec--2014-03-11--what-i-learned-about-online-to-offline/",
+        "note": "Founder's postmortem on online-to-offline",
+        "verified": "search_result"
+      }
+    ]
+  }
+}

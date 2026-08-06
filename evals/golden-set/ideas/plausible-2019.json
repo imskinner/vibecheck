@@ -1,0 +1,27 @@
+{
+  "id": "plausible-2019",
+  "schema_version": 1,
+  "layer1": {
+    "name": "Plausible Analytics",
+    "one_liner": "A lightweight, privacy-friendly alternative to Google Analytics.",
+    "description": "A single-page analytics dashboard with no cookies and no personal data collection, sold as a subscription. Competing directly against a free incumbent with near-total market share.",
+    "t0": "2019-01-01",
+    "outcome": "succeeded",
+    "outcome_date": "2024-12-01",
+    "outcome_basis": "public_record",
+    "outcome_note": "Bootstrapped past $1M ARR and publicly reported around $3.1M ARR by late 2024. The founders published their own milestone write-ups at $500k and $1M.",
+    "contamination_risk": "medium",
+    "sources": [
+      {
+        "url": "https://plausible.io/blog/bootstrapping-saas",
+        "note": "Founders' write-up on reaching $500k ARR",
+        "verified": "search_result"
+      },
+      {
+        "url": "https://plausible.io/blog/open-source-saas",
+        "note": "Founders' write-up on reaching $1M ARR",
+        "verified": "search_result"
+      }
+    ]
+  }
+}
