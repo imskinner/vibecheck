@@ -111,7 +111,11 @@ export function createAnthropicModelClient(
     usage: () => ({ ...totals }),
 
     async callTool(request: ToolCallRequest): Promise<unknown> {
-      const message = await client.messages.create({
+      // Streamed, then collected. Non-streaming requests are refused by the SDK at the token
+      // budgets the big-input stages need (proven live at 32k), and streaming removes the
+      // HTTP-timeout class for every stage at once. finalMessage() yields the same Message
+      // object create() would have.
+      const stream = client.messages.stream({
         model: request.modelId,
         max_tokens: request.maxTokens ?? options.maxTokens ?? DEFAULT_MAX_TOKENS,
         system: request.system,
@@ -132,6 +136,7 @@ export function createAnthropicModelClient(
         tool_choice: { type: 'tool', name: request.tool.name },
         ...(options.effort === undefined ? {} : { output_config: { effort: options.effort } }),
       })
+      const message = await stream.finalMessage()
 
       totals.calls += 1
       totals.inputTokens += message.usage.input_tokens

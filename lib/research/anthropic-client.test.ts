@@ -22,10 +22,11 @@ const request: ToolCallRequest = {
 
 const usage = { input_tokens: 100, output_tokens: 20, cache_read_input_tokens: 5, cache_creation_input_tokens: 0 }
 
-/** Minimal stand-in for the SDK client. Nothing here touches the network. */
+/** Minimal stand-in for the SDK client. Nothing here touches the network. The client streams
+ * and collects via finalMessage(), so the stub mirrors that surface. */
 function stubSdk(message: unknown) {
-  const create = vi.fn(async (_body: Record<string, unknown>) => message)
-  return { create, sdk: { messages: { create } } as unknown as Anthropic }
+  const create = vi.fn((_body: Record<string, unknown>) => ({ finalMessage: async () => message }))
+  return { create, sdk: { messages: { stream: create } } as unknown as Anthropic }
 }
 
 const toolUseMessage = (input: unknown, over: Record<string, unknown> = {}) => ({
